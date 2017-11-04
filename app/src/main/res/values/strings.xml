@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Скидки и акции</string>
+    <string name="app_name_ru">Скидки, акции и события Минска</string>
+    <string name="app_description">не упусти удачу в своем городе</string>
+
+    <string name="menu_drawer_all">Все события</string>
+    <string name="menu_drawer_brand">По брэндам</string>
+    <string name="menu_drawer_sale_clothes">Одежда</string>
+    <string name="menu_drawer_sale_shoes">Обувь</string>
+    <string name="menu_drawer_sale_jewellery">Бижутерия</string>
+    <string name="menu_drawer_sale_electronics">Электроника</string>
+    <string name="menu_drawer_sale_others">Другое</string>
+    <string name="menu_drawer_selected">Закладки</string>
+    <string name="menu_drawer_settings">Подписки</string>
+    <string name="menu_drawer_cafe">Кафе, бары, рестораны</string>
+    <string name="menu_drawer_sport">Спорт</string>
+    <string name="menu_drawer_entertainment">Развлечения</string>
+    <string name="menu_drawer_sales">Скидки и акции</string>
+    <string name="menu_drawer_events">События</string>
+    <string name="menu_drawer_my">Мои настройки</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_about">О программе</string>
+    <string name="action_post_adv">Разместить объявление</string>
+
+    <string name="main_fragment_item_default_text">Item default text</string>
+    <string name="main_fragment_item_img_description">Image description</string>
+
+    <string name="title_activity_single_fragment">Информация</string>
+
+    <string name="single_fragment_button_add">избранное</string>
+    <string name="remove_from_favorite">Убрать из избранного</string>
+    <string name="add_to_favorite">Добавить в избранное</string>
+    <string name="template">This is a template</string>
+
+    <string name="post_adv">Разместить объявление</string>
+    <string name="post_adv_text">Вы можете разместить свое объявление, прислав нам всю информацию по адресу:</string>
+    <string name="post_adv_mail">mail@ilavista.by</string>
+    <string name="about">О приложении</string>
+    <string name="about_text">Мы размещаем только избранные скидки и акции, которые действительно стоят упоминания.
+        Мы предоставляем информацию, которую находим в Интернете и на улицах города. Мы не несем ответственность
+        за достоверность информации, поэтому рекомендуем уточнять детали акции у организаторов. </string>
+    <string name="main_fragment_text">загрузка данных...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="subscriptions_text">Подписки</string>
+    <string name="subscriptions_description">Вы будете получать уведомление, когда появится событие от этих отганизаторов</string>
+    <string name="add_to_subscriptions">Подписаться на обновления от </string>
+    <string name="fragment_brand_text">По названию брэнда</string>
+</resources>

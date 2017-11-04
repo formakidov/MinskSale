@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_all"
+            android:icon="@drawable/img_all"
+            android:title="@string/menu_drawer_all"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_brand"
+            android:icon="@drawable/img_brands"
+            android:title="@string/menu_drawer_brand"/>
+
+        <item android:title="@string/menu_drawer_sales">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_clothes"
+                    android:icon="@drawable/img_clothes"
+                    android:title="@string/menu_drawer_sale_clothes" />
+                <item
+                    android:id="@+id/nav_shoes"
+                    android:icon="@drawable/img_shoes"
+                    android:title="@string/menu_drawer_sale_shoes" />
+                <item
+                    android:id="@+id/nav_jewellery"
+                    android:icon="@drawable/img_jewellery"
+                    android:title="@string/menu_drawer_sale_jewellery" />
+                <item
+                    android:id="@+id/nav_electronics"
+                    android:icon="@drawable/img_electronics"
+                    android:title="@string/menu_drawer_sale_electronics" />
+
+                <item
+                    android:id="@+id/nav_others"
+                    android:icon="@drawable/img_others"
+                    android:title="@string/menu_drawer_sale_others" />
+                </group>
+            </menu>
+        </item>
+
+        <item android:title="@string/menu_drawer_events">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_cafe"
+                        android:icon="@drawable/img_cafe"
+                        android:title="@string/menu_drawer_cafe" />
+                    <item
+                        android:id="@+id/nav_sport"
+                        android:icon="@drawable/img_sport"
+                        android:title="@string/menu_drawer_sport" />
+                    <item
+                        android:id="@+id/nav_entertainment"
+                        android:icon="@drawable/img_entertainment"
+                        android:title="@string/menu_drawer_entertainment" />
+                </group>
+            </menu>
+        </item>
+
+        <item android:title="@string/menu_drawer_my">
+            <menu>
+                <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_selected"
+                    android:icon="@drawable/ic_favorite_border_white_24dp"
+                    android:title="@string/menu_drawer_selected" />
+                <item
+                    android:id="@+id/nav_subscription"
+                    android:icon="@drawable/ic_update_white_24dp"
+                    android:title="@string/menu_drawer_settings" />
+                </group>
+            </menu>
+        </item>
+    </group>
+</menu>
