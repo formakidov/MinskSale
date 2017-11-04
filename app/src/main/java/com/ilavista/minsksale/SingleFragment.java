@@ -34,16 +34,16 @@ public class SingleFragment extends Fragment {
         context = getActivity();
         int ID = getArguments().getInt(MainFragment.EXTRA_MESSAGE_ID, -1);
         int POSITION = getArguments().getInt(MainFragment.EXTRA_MESSAGE_POSITION, 0);
-        TextView textViewName       = (TextView)v.findViewById(R.id.singleFragmentTextName);
-        final TextView textViewOrganizer  = (TextView)v.findViewById(R.id.singleFragmentTextOrganizer);
-        TextView textViewDate  = (TextView)v.findViewById(R.id.singleFragmentTextDate);
-        TextView textViewLocation   = (TextView)v.findViewById(R.id.singleFragmentTextLocation);
-        TextView textViewDescription = (TextView)v.findViewById(R.id.singleFragmentTextDescription);
-        final LinearLayout mButtonAddToSubscriptions = (LinearLayout)v.findViewById(R.id.layout_add_to_subscribtions);
-        final TextView textAddToSubscriptions = (TextView)v.findViewById(R.id.textViewOrganizer);
-        ImageView mImage = (ImageView)v.findViewById(R.id.singleFragmentImage);
-        LinearLayout mLayout = (LinearLayout) v.findViewById(R.id.singleFragmentLayout);
-        final LinearLayout mButtonAddToFavorite = (LinearLayout)v.findViewById(R.id.layout_add_to_favorite);
+        TextView textViewName = v.findViewById(R.id.singleFragmentTextName);
+        final TextView textViewOrganizer = v.findViewById(R.id.singleFragmentTextOrganizer);
+        TextView textViewDate = v.findViewById(R.id.singleFragmentTextDate);
+        TextView textViewLocation = v.findViewById(R.id.singleFragmentTextLocation);
+        TextView textViewDescription = v.findViewById(R.id.singleFragmentTextDescription);
+        final LinearLayout mButtonAddToSubscriptions = v.findViewById(R.id.layout_add_to_subscribtions);
+        final TextView textAddToSubscriptions = v.findViewById(R.id.textViewOrganizer);
+        ImageView mImage = v.findViewById(R.id.singleFragmentImage);
+        LinearLayout mLayout = v.findViewById(R.id.singleFragmentLayout);
+        final LinearLayout mButtonAddToFavorite = v.findViewById(R.id.layout_add_to_favorite);
 
         event = LoadEventFromDB(getActivity(), ID);
 
@@ -81,8 +81,7 @@ public class SingleFragment extends Fragment {
                         mButtonAddToFavorite.setBackgroundResource(R.color.colorPrimary);
 
                         animator.start();
-                    }
-                    else
+                    } else
                         mButtonAddToFavorite.setBackgroundResource(R.color.colorPrimary);
 
                     addEventToFavorite(event);
@@ -125,56 +124,54 @@ public class SingleFragment extends Fragment {
         mLayout.setTranslationY(POSITION);
         mLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(mLayout)).start();
 
-        Log.d("MyLog", "Single fragment created View");
+        Log.d("logf", "Single fragment created View");
         return v;
     }
 
     // My functions -------------------------------------------------------------------------
-    public MyEvent LoadEventFromDB(Context context, int ID){
-        DBManager dbManager = new DBManager(context,DBHelper.DATABASE_TABLE_EVENTS);
+    public MyEvent LoadEventFromDB(Context context, int ID) {
+        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_EVENTS);
         MyEvent event = dbManager.getEventFromDB(ID);
         isFavorite = dbManager.isEventFavorite(ID);
         return event;
     }
+
     //----------------------------------------------------------------------------------------
-    void processNullText(){
-        if (event.getType() == null)        event.setType("");
-        if (event.getName() == null)        event.setName("");
-        if (event.getOrganizer() == null)   event.setOrganizer("");
-        if (event.getStartDate() == null)   event.setStartDate("");
-        if (event.getStartTime() == null)   event.setStartTime("");
-        if (event.getFinishDate() == null)  event.setFinishDate("");
-        if (event.getFinishTime() == null)  event.setFinishTime("");
-        if (event.getImageName() == null)   event.setImageName("");
-        if (event.getLocation() == null)    event.setLocation("");
+    void processNullText() {
+        if (event.getType() == null) event.setType("");
+        if (event.getName() == null) event.setName("");
+        if (event.getOrganizer() == null) event.setOrganizer("");
+        if (event.getStartDate() == null) event.setStartDate("");
+        if (event.getStartTime() == null) event.setStartTime("");
+        if (event.getFinishDate() == null) event.setFinishDate("");
+        if (event.getFinishTime() == null) event.setFinishTime("");
+        if (event.getImageName() == null) event.setImageName("");
+        if (event.getLocation() == null) event.setLocation("");
         if (event.getDescription() == null) event.setDescription("");
     }
+
     //----------------------------------------------------------------------------------------
-    private String getDataTextView(){
+    private String getDataTextView() {
         String str;
         String start_date = event.getStartDate();
         String finish_date = event.getFinishDate();
         String start_time = "";
-        if (event.getStartTime().length()>5)
+        if (event.getStartTime().length() > 5)
             start_time = event.getStartTime().substring(0, 5);
         String finish_time = "";
-        if (event.getStartTime().length()>5)
-            finish_time = event.getFinishTime().substring(0,5);
+        if (event.getStartTime().length() > 5)
+            finish_time = event.getFinishTime().substring(0, 5);
 
         if (start_time.equals("00:00")) start_time = "";
         if (finish_time.equals("00:00")) finish_time = "";
-        if ((start_date.equals(""))&&(finish_date.equals(""))) str = "";
-        else
-        if ((start_date.equals(finish_date))&&(event.getFinishTime().equals("")))
+        if ((start_date.equals("")) && (finish_date.equals(""))) str = "";
+        else if ((start_date.equals(finish_date)) && (event.getFinishTime().equals("")))
             str = "Время проводения: " + processTextDate(start_date) + " с " + start_time;
-        else
-        if (start_date.equals(finish_date)) {
+        else if (start_date.equals(finish_date)) {
             str = "Время проводения: " + processTextDate(start_date) + " с " + start_time;
             if (!finish_time.equals("")) str += " до "
                     + finish_time;
-        }
-        else
-        if (start_date.equals("")) str = "Окончание: " + processTextDate(finish_date)
+        } else if (start_date.equals("")) str = "Окончание: " + processTextDate(finish_date)
                 + "  " + finish_time;
         else
             str = "Начало: " + processTextDate(start_date) + "  " + start_time + "\n"
@@ -182,23 +179,25 @@ public class SingleFragment extends Fragment {
         return str;
     }
 
-    private String processTextDate(String str){
+    private String processTextDate(String str) {
         String result;
-        int day = Integer.parseInt(str.substring(8,10));
-        int month_int = Integer.parseInt(str.substring(5,7));
-        String month = new DateFormatSymbols().getMonths()[month_int-1];
-        result = "" + day + " " + month + " " +str.substring(0,4);
+        int day = Integer.parseInt(str.substring(8, 10));
+        int month_int = Integer.parseInt(str.substring(5, 7));
+        String month = new DateFormatSymbols().getMonths()[month_int - 1];
+        result = "" + day + " " + month + " " + str.substring(0, 4);
         return result;
     }
+
     //----------------------------------------------------------------------------------------
-    void addEventToFavorite(MyEvent event){
-        DBManager dbManager = new DBManager(context,DBHelper.DATABASE_TABLE_FAVORITE);
+    void addEventToFavorite(MyEvent event) {
+        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
         dbManager.insertInDB(event);
         isFavorite = true;
     }
+
     //------------------------------------------------------------------------------------
-    void removeEventFromFavorite(MyEvent event){
-        DBManager dbManager = new DBManager(context,DBHelper.DATABASE_TABLE_FAVORITE);
+    void removeEventFromFavorite(MyEvent event) {
+        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
         dbManager.removeFromDB(event);
         isFavorite = false;
     }

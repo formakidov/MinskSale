@@ -66,6 +66,17 @@ public class SubscriptionManager {
         dbHelper.close();
     }
 
+    public static void setNotifications(Context context, long time) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, MyReceiver.class);
+        intent.putExtra(NOTIFICATION_BY_TIME, true);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        alarmManager.cancel(pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
+        Log.d("logf", "AlarmManager is set (period: " + time / 1000 + " sec)");
+    }
+
     public void add(String subscription) {
         DBHelper dbHelper = new DBHelper(context);
         // создаем объект для данных
@@ -77,18 +88,7 @@ public class SubscriptionManager {
         db.insert(db_table_name, null, singleValue);
 
         dbHelper.close();
-        Log.d("MyLog", subscription + " added to Subscriptions");
-    }
-
-    public void remove(String subscription) {
-        DBHelper dbHelper = new DBHelper(context);
-        // подключаемся к БД
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        subscription = subscription.replaceAll("'", "''");
-        db.delete(db_table_name, "Organizer='" + subscription + "'", null);
-
-        dbHelper.close();
-        Log.d("MyLog", subscription + " removed from Subscriptions");
+        Log.d("logf", subscription + " added to Subscriptions");
     }
 
     public Boolean isInSubscriptions(String subscription) {
@@ -107,15 +107,15 @@ public class SubscriptionManager {
         return true;
     }
 
-    public static void setNotifications(Context context, long time) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, MyReceiver.class);
-        intent.putExtra(NOTIFICATION_BY_TIME, true);
+    public void remove(String subscription) {
+        DBHelper dbHelper = new DBHelper(context);
+        // подключаемся к БД
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        subscription = subscription.replaceAll("'", "''");
+        db.delete(db_table_name, "Organizer='" + subscription + "'", null);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager.cancel(pendingIntent);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, pendingIntent);
-        Log.d("MyLog", "AlarmManager is set (period: " + time / 1000 + " sec)");
+        dbHelper.close();
+        Log.d("logf", subscription + " removed from Subscriptions");
     }
 }
 

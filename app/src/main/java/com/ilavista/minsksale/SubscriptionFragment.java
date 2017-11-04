@@ -3,7 +3,6 @@ package com.ilavista.minsksale;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,10 +23,9 @@ public class SubscriptionFragment extends Fragment {
     private LinearLayout layout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_subscription, container, false);
-        layout = (LinearLayout)v.findViewById(R.id.subscriptionsLayout);
+        layout = v.findViewById(R.id.subscriptionsLayout);
         return v;
     }
 
@@ -41,19 +39,18 @@ public class SubscriptionFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if(layout.getChildCount() > 0)
+        if (layout.getChildCount() > 0) {
             layout.removeAllViews();
+        }
         manager = new SubscriptionManager(getActivity());
         subscriptions = manager.getAll();
         context = getActivity();
 
         TextView mTextView;
-        LinearLayout mLayout,mLayoutLeft,mLayoutRight;
+        LinearLayout mLayout, mLayoutLeft, mLayoutRight;
         ImageView mButton;
 
         for (final String single_subscription : subscriptions) {
-
-
 
             mLayout = new LinearLayout(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -77,7 +74,7 @@ public class SubscriptionFragment extends Fragment {
                     String s = String.valueOf(single_subscription);
                     SubscriptionManager manager = new SubscriptionManager(context);
                     manager.remove(s);
-                    Log.d("MyLog", "Remove " + s);
+                    Log.d("logf", "Remove " + s);
                     onResume();
                 }
             });

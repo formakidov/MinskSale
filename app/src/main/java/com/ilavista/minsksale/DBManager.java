@@ -30,8 +30,8 @@ public class DBManager {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 // удаляем все записи
                 int clearCount = db.delete(db_table_name, null, null);
-                Log.d("MyLog", "Clear table:" + db_table_name);
-                Log.d("MyLog", "deleted rows count = " + clearCount);
+                Log.d("logf", "Clear table:" + db_table_name);
+                Log.d("logf", "deleted rows count = " + clearCount);
 
                 for (MyEvent event : events) {
                     singleValue.put("ID", event.getID());
@@ -48,7 +48,7 @@ public class DBManager {
                     singleValue.put("Location", event.getLocation());
                     singleValue.put("Description", event.getDescription());
                     long rowID = db.insert("Events", null, singleValue);
-                    Log.d("MyLog", "Row inserted in DB, ID = " + rowID);
+                    Log.d("logf", "Row inserted in DB, ID = " + rowID);
                 }
                 dbHelper.close();
             }
@@ -111,7 +111,7 @@ public class DBManager {
                         events.add(singleEvent);
                     } while (c.moveToNext());
                 } else
-                    Log.d("MyLog", "0 rows");
+                    Log.d("logf", "0 rows");
                 c.close();
 
                 dbHelper.close();
@@ -145,7 +145,7 @@ public class DBManager {
                 singleValue.put("Location", event.getLocation());
                 singleValue.put("Description", event.getDescription());
                 long rowID = db.insert(db_table_name, null, singleValue);
-                Log.d("MyLog", "Row inserted in DB, ID = " + rowID);
+                Log.d("logf", "Row inserted in DB, ID = " + rowID);
 
                 dbHelper.close();
             }
@@ -161,7 +161,7 @@ public class DBManager {
                 // подключаемся к БД
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 int i = db.delete(db_table_name, "ID=?", new String[]{Long.toString(event.getID())});
-                Log.d("MyLog", "Row removed from MyFavorite, " + i);
+                Log.d("logf", "Row removed from MyFavorite, " + i);
                 dbHelper.close();
             }
         });
@@ -237,7 +237,7 @@ public class DBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // удаляем все записи
         int clearCount = db.delete(db_table_name, null, null);
-        Log.d("MyLog", "Clear table:" + db_table_name);
+        Log.d("logf", "Clear table:" + db_table_name);
 
         for (MyEvent event : events) {
             singleValue.put("ID", event.getID());
@@ -314,7 +314,7 @@ public class DBManager {
                 events.add(singleEvent);
             } while (c.moveToNext());
         } else
-            Log.d("MyLog", "0 rows");
+            Log.d("logf", "0 rows");
         c.close();
 
         dbHelper.close();

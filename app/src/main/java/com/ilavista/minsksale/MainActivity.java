@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MyLog", "Main Activity onCreate");
+        Log.d("logf", "Main Activity onCreate");
         ListViewPosition = 0;
 
         SubscriptionManager.setNotifications(this, ProgramConfigs.getInstance(this).getNotificationPeriod());
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            Log.d("MyLog", "MyFragmentPagerAdapter created");
+            Log.d("logf", "MyFragmentPagerAdapter created");
 
             if (extraID != -1) {
                 isEventOpen = true;

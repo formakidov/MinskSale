@@ -7,10 +7,10 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final  String DATABASE_NAME = "ilavistaDB";
-    public static final  String DATABASE_TABLE_EVENTS = "Events";
-    public static final  String DATABASE_TABLE_FAVORITE = "MyFavorite";
-    public static final  String DATABASE_TABLE_SUBSCRIPTION = "Subscription";
+    public static final String DATABASE_NAME = "ilavistaDB";
+    public static final String DATABASE_TABLE_EVENTS = "Events";
+    public static final String DATABASE_TABLE_FAVORITE = "MyFavorite";
+    public static final String DATABASE_TABLE_SUBSCRIPTION = "Subscription";
 
     public DBHelper(Context context) {
         // конструктор суперкласса
@@ -19,7 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("MyLog", "onCreate database");
+        Log.d("logf", "onCreate database");
         // создаем таблицу с полями
         db.execSQL("create table Events ("
                 + "ID integer primary key autoincrement,"
@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d("MyLog", "onUpgrade database");
+        Log.d("logf", "onUpgrade database");
 
         db.execSQL("create table Subscription ("
                 + "Organizer text" + ");");

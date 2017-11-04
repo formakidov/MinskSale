@@ -1,19 +1,19 @@
 package com.ilavista.minsksale;
 
 public class MyEvent {
-    private long                ID;
-    private String              Type;
-    private int                 Rate;
-    private String              Name;
-    private String              Organizer;
-    private String              StartDate;
-    private String              StartTime;
-    private String              FinishDate;
-    private String              FinishTime;
-    private String              ImageURL;
-    private String              ImageName;
-    private String              Location;
-    private String              Description;
+    private long ID;
+    private String Type;
+    private int Rate;
+    private String Name;
+    private String Organizer;
+    private String StartDate;
+    private String StartTime;
+    private String FinishDate;
+    private String FinishTime;
+    private String ImageURL;
+    private String ImageName;
+    private String Location;
+    private String Description;
 
     public MyEvent() {
         ID = -1;

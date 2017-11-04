@@ -94,7 +94,7 @@ public class MyReceiver extends BroadcastReceiver {
                 // expect HTTP 200 OK, so we don't mistakenly save error report
                 // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Log.d("MyLog","Get error report: " + "Server returned HTTP " + connection.getResponseCode()
+                    Log.d("logf", "Get error report: " + "Server returned HTTP " + connection.getResponseCode()
                             + " " + connection.getResponseMessage());
                     return "Server returned HTTP " + connection.getResponseCode()
                             + " " + connection.getResponseMessage();

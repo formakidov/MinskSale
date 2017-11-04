@@ -53,10 +53,10 @@ public class MainFragment extends Fragment {
         context = getActivity();
         pagerAdapter = ((MainActivity) context).getPagerAdapter();
 
-        mTextDownloading = (TextView) view.findViewById(R.id.main_fragment_text);
+        mTextDownloading = view.findViewById(R.id.main_fragment_text);
 
         // Set Swipe Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
+        mSwipeRefreshLayout = view.findViewById(R.id.refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -67,12 +67,12 @@ public class MainFragment extends Fragment {
             }
         });
 
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("MyLog", "Click on ListView item position " + position);
+                Log.d("logf", "Click on ListView item position " + position);
                 ((MainActivity) context).setIsEventOpen(true);
                 // getting list view scroll position
                 ((MainActivity) context).setListViewPosition(position);
@@ -90,7 +90,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                mAdapter.setAnimate(scrollState == SCROLL_STATE_FLING || SCROLL_STATE_TOUCH_SCROLL == scrollState);
+//                mAdapter.setAnimate(scrollState == SCROLL_STATE_FLING || SCROLL_STATE_TOUCH_SCROLL == scrollState);
             }
 
             @Override
@@ -104,7 +104,7 @@ public class MainFragment extends Fragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
-                        Log.d("MyLog", "MainFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
+                        Log.d("logf", "MainFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
                         mSwipeRefreshLayout.setRefreshing(false);
                         LoadDataFromDB(context, mEvents, type);
                         animateListView(mListView);
@@ -112,7 +112,7 @@ public class MainFragment extends Fragment {
                         break;
 
                     case DownloadThread.NO_CONNECTION:
-                        Log.d("MyLog", "MainFragment Handler message: NO_CONNECTION");
+                        Log.d("logf", "MainFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
                         MakeSnackBar("Отсутсвует подключение к Интернету");
                         LoadDataFromDB(context, mEvents, type);
@@ -137,9 +137,23 @@ public class MainFragment extends Fragment {
 
         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
 
-        Log.d("MyLog", "Main fragment created View");
+        Log.d("logf", "Main fragment created View");
 
         return view;
+    }
+
+    private void MakeSnackBar(String text) {
+        Snackbar snack = Snackbar.make(mSwipeRefreshLayout, text, Snackbar.LENGTH_SHORT);
+        View view = snack.getView();
+        view.setBackgroundResource(R.color.colorPrimary);
+        TextView snackTextView = view.findViewById(android.support.design.R.id.snackbar_text);
+        snackTextView.setTextColor(Color.parseColor("#6c440b"));
+        snack.show();
+    }
+
+    //------------------------------------------------------------------------------------
+    private void setFragmentInPager(Fragment newFragment) {
+        pagerAdapter.setFragmentLeft(newFragment);
     }
 
     private class EventAdapter extends ArrayAdapter<MyEvent> {
@@ -167,10 +181,10 @@ public class MainFragment extends Fragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_main_list_item, parent, false);
 
             if (getCount() == 0) {
-                Log.d("MyLog", "Array of events is empty");
+                Log.d("logf", "Array of events is empty");
                 return null;
             }
-            final ImageView mImage = (ImageView) convertView.findViewById(R.id.main_list_item_image);
+            final ImageView mImage = convertView.findViewById(R.id.main_list_item_image);
 
             Bitmap img = BitmapFactory.decodeFile(context.getFilesDir() + event.getImageName());
             mImage.setImageBitmap(img);
@@ -194,20 +208,6 @@ public class MainFragment extends Fragment {
             v.animate().translationY(0).translationX(0).setDuration(300)
                     .setListener(new InnerAnimatorListener(v)).start();
         }
-    }
-
-    //------------------------------------------------------------------------------------
-    private void setFragmentInPager(Fragment newFragment) {
-        pagerAdapter.setFragmentLeft(newFragment);
-    }
-
-    private void MakeSnackBar(String text) {
-        Snackbar snack = Snackbar.make(mSwipeRefreshLayout, text, Snackbar.LENGTH_SHORT);
-        View view = snack.getView();
-        view.setBackgroundResource(R.color.colorPrimary);
-        TextView snackTextView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-        snackTextView.setTextColor(Color.parseColor("#6c440b"));
-        snack.show();
     }
 
     private void LoadDataFromDB(Context context, List<MyEvent> events, String type) {

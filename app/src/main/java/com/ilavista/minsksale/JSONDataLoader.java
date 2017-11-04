@@ -33,7 +33,7 @@ public class JSONDataLoader {
         return events;
     }
 
-      // convert InputStream to String
+    // convert InputStream to String
     private static String getStringFromInputStream(InputStream is) {
 
         BufferedReader br = null;

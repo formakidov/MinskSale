@@ -90,7 +90,7 @@ public class BrandsFragment extends Fragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
-                        Log.d("MyLog", "BrandsFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
+                        Log.d("logf", "BrandsFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
                         mSwipeRefreshLayout.setRefreshing(false);
                         LoadDataFromDB(context, mEvents, mOrganizers);
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
@@ -98,7 +98,7 @@ public class BrandsFragment extends Fragment {
                         break;
 
                     case DownloadThread.NO_CONNECTION:
-                        Log.d("MyLog", "BrandsFragment Handler message: NO_CONNECTION");
+                        Log.d("logf", "BrandsFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
                         MakeSnackBar("Отсутсвует подключение к Интернету");
                         LoadDataFromDB(context, mEvents, mOrganizers);
@@ -116,7 +116,7 @@ public class BrandsFragment extends Fragment {
             LoadDataFromDB(context, mEvents, mOrganizers);
         }
 
-        Log.d("MyLog", "Brands fragment created View");
+        Log.d("logf", "Brands fragment created View");
         return view;
     }
 
@@ -180,7 +180,7 @@ public class BrandsFragment extends Fragment {
             textViewName.setText(organizer.getName());
             textViewCount.setText("событий: " + organizer.getEventsCount());
             if (getCount() == 0) {
-                Log.d("MyLog", "Array of events is empty");
+                Log.d("logf", "Array of events is empty");
                 return null;
             }
 
