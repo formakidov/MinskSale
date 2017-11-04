@@ -1,168 +1,169 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
     android:orientation="horizontal"
-    tools:context="com.ilavista.minsksale.SingleFragment"
-    android:background="@color/colorPrimaryLight">
+    tools:context="com.ilavista.minsksale.SingleFragment">
 
     <LinearLayout
+        android:id="@+id/singleFragmentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/singleFragmentLayout"
         android:paddingBottom="10sp">
 
         <ImageView
+            android:id="@+id/singleFragmentImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/singleFragmentImage"
             android:adjustViewBounds="true"
             android:background="@color/colorPrimary"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp" />
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"/>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/single_fragment_button_add"
             android:layout_toStartOf="@+id/single_fragment_button_add"
-            android:layout_alignParentTop="true">
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/singleFragmentTextName"
-                android:textColor="@color/colorPrimaryText"
-                android:text="Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:paddingBottom="5dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:gravity="center_horizontal"
                 android:paddingTop="15dp"
-                android:paddingBottom="5dp" />
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorPrimaryText"/>
 
             <TextView
+                android:id="@+id/singleFragmentTextOrganizer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/singleFragmentTextOrganizer"
-                android:text="Organizer"
-                android:textColor="@color/colorAccent"
+                android:gravity="center_horizontal"
+                android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:gravity="center_horizontal"
-                android:paddingBottom="15dp" />
+                android:text="Organizer"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/colorAccent"/>
 
             <TextView
+                android:id="@+id/singleFragmentTextLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:id="@+id/singleFragmentTextLocation"
-                android:text="Location"
+                android:layout_marginBottom="10dp"
                 android:gravity="center_horizontal"
-                android:layout_marginBottom="10dp" />
+                android:text="Location"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:orientation="horizontal"
+                    android:id="@+id/layout_add_to_subscribtions"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="@drawable/my_layout_all"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:background="@drawable/my_layout_all"
-                    android:id="@+id/layout_add_to_subscribtions">
+                    android:paddingTop="10dp">
 
                     <ImageView
+                        android:id="@+id/imageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/imageView"
-                        android:src="@drawable/ic_done_black_24dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_done_black_24dp"/>
 
                     <TextView
+                        android:id="@+id/textViewOrganizer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="подписаться на Organizer"
-                        android:textColor="@color/colorPrimaryText"
-                        android:id="@+id/textViewOrganizer"
-                        android:paddingRight="5dp"
-                        android:paddingLeft="5dp"
+                        android:layout_weight="15"
                         android:gravity="center"
-                        android:layout_weight="15" />
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="подписаться на Organizer"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/colorPrimaryText"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:orientation="horizontal"
+                    android:id="@+id/layout_add_to_favorite"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:background="@drawable/my_layout_no_left"
                     android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:background="@drawable/my_layout_no_left"
-                    android:id="@+id/layout_add_to_favorite">
+                    android:paddingTop="10dp">
 
                     <TextView
+                        android:id="@+id/textAddToFavorite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="добавить в закладки"
-                        android:id="@+id/textAddToFavorite"
-                        android:paddingLeft="5dp"
-                        android:textColor="@color/colorPrimaryText"
-                        android:paddingRight="5dp"
+                        android:layout_weight="15"
                         android:gravity="center"
-                        android:layout_weight="15" />
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="добавить в закладки"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/colorPrimaryText"/>
 
                     <ImageView
+                        android:id="@+id/imageView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/imageView2"
-                        android:src="@drawable/ic_favorite_border_black_24dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_favorite_border_black_24dp"/>
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/singleFragmentTextDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/singleFragmentTextDate"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
-            android:text="Date"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:gravity="center_horizontal" />
+            android:text="Date"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
+            android:id="@+id/singleFragmentTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/singleFragmentTextDescription"
-            android:text="Description"
-            android:textColor="@color/colorPrimaryText"
             android:layout_marginTop="10dp"
+            android:background="@drawable/my_layout_all"
+            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:background="@drawable/my_layout_all"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:text="Description"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorPrimaryText"/>
 
 
     </LinearLayout>
