@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -17,8 +16,30 @@ import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SingleFragment extends Fragment {
+    @BindView(R.id.nameTv)
+    TextView textViewName;
+    @BindView(R.id.organizerTv)
+    TextView organizer;
+    @BindView(R.id.textDate)
+    TextView date;
+    @BindView(R.id.locationTv)
+    TextView location;
+    @BindView(R.id.descriptionTv)
+    TextView description;
+    @BindView(R.id.layoutSubscribe)
+    LinearLayout layoutSubscribe;
+    @BindView(R.id.subscriptionsOrganizerTv)
+    TextView subscriptionsOrganizer;
+    @BindView(R.id.image)
+    ImageView image;
+    @BindView(R.id.rootLayout)
+    LinearLayout rootLayout;
+    @BindView(R.id.layoutFavorite)
+    LinearLayout layoutFavorite;
 
     Context context;
 
@@ -30,20 +51,12 @@ public class SingleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_single, container, false);
+        ButterKnife.bind(v);
 
         context = getActivity();
         int ID = getArguments().getInt(MainFragment.EXTRA_MESSAGE_ID, -1);
         int POSITION = getArguments().getInt(MainFragment.EXTRA_MESSAGE_POSITION, 0);
-        TextView textViewName = v.findViewById(R.id.singleFragmentTextName);
-        final TextView textViewOrganizer = v.findViewById(R.id.singleFragmentTextOrganizer);
-        TextView textViewDate = v.findViewById(R.id.singleFragmentTextDate);
-        TextView textViewLocation = v.findViewById(R.id.singleFragmentTextLocation);
-        TextView textViewDescription = v.findViewById(R.id.singleFragmentTextDescription);
-        final LinearLayout mButtonAddToSubscriptions = v.findViewById(R.id.layout_add_to_subscribtions);
-        final TextView textAddToSubscriptions = v.findViewById(R.id.textViewOrganizer);
-        ImageView mImage = v.findViewById(R.id.singleFragmentImage);
-        LinearLayout mLayout = v.findViewById(R.id.singleFragmentLayout);
-        final LinearLayout mButtonAddToFavorite = v.findViewById(R.id.layout_add_to_favorite);
+
 
         event = LoadEventFromDB(getActivity(), ID);
 
@@ -54,81 +67,75 @@ public class SingleFragment extends Fragment {
         processNullText();
 
         Bitmap img = BitmapFactory.decodeFile(context.getFilesDir() + event.getImageName());
-        mImage.setImageBitmap(img);
+        image.setImageBitmap(img);
         textViewName.setText(event.getName());
-        textViewOrganizer.setText(event.getOrganizer());
-        textViewDate.setText(getDataTextView());
-        textViewLocation.setText(event.getLocation());
-        textViewDescription.setText(event.getDescription());
+        organizer.setText(event.getOrganizer());
+        date.setText(getFinishDateString());
+        location.setText(event.getLocation());
+        description.setText(event.getDescription());
 
         if (isFavorite)
-            mButtonAddToFavorite.setBackgroundResource(R.color.colorPrimary);
+            layoutFavorite.setBackgroundResource(R.color.colorPrimary);
         else
-            mButtonAddToFavorite.setBackgroundResource(R.drawable.my_layout_no_left);
+            layoutFavorite.setBackgroundResource(R.drawable.my_layout_no_left);
 
-        mButtonAddToFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isFavorite) {
-                    removeEventFromFavorite(event);
-                    mButtonAddToFavorite.setBackgroundResource(R.drawable.my_layout_no_left);
-                } else {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        int finalRadius = (int) Math.hypot(mButtonAddToFavorite.getWidth() / 2, mButtonAddToFavorite.getHeight() / 2);
+        layoutFavorite.setOnClickListener(v1 -> {
+            if (isFavorite) {
+                removeEventFromFavorite(event);
+                layoutFavorite.setBackgroundResource(R.drawable.my_layout_no_left);
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    int finalRadius = (int) Math.hypot(layoutFavorite.getWidth() / 2, layoutFavorite.getHeight() / 2);
 
-                        Animator animator = ViewAnimationUtils.createCircularReveal(mButtonAddToFavorite,
-                                mButtonAddToFavorite.getWidth() / 2, mButtonAddToFavorite.getHeight() / 2, 0, finalRadius);
-                        mButtonAddToFavorite.setBackgroundResource(R.color.colorPrimary);
+                    Animator animator = ViewAnimationUtils.createCircularReveal(layoutFavorite,
+                            layoutFavorite.getWidth() / 2, layoutFavorite.getHeight() / 2, 0, finalRadius);
+                    layoutFavorite.setBackgroundResource(R.color.colorPrimary);
 
-                        animator.start();
-                    } else
-                        mButtonAddToFavorite.setBackgroundResource(R.color.colorPrimary);
+                    animator.start();
+                } else
+                    layoutFavorite.setBackgroundResource(R.color.colorPrimary);
 
-                    addEventToFavorite(event);
-                }
+                addEventToFavorite(event);
             }
         });
 
-        if (isSubscribed)
-            mButtonAddToSubscriptions.setBackgroundResource(R.color.colorPrimary);
-        else
-            mButtonAddToSubscriptions.setBackgroundResource(R.drawable.my_layout_no_left);
-        textAddToSubscriptions.setText("Подписаться на обновления от " + event.getOrganizer());
-        mButtonAddToSubscriptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (isSubscribed) {
+            layoutSubscribe.setBackgroundResource(R.color.colorPrimary);
+        } else {
+            layoutSubscribe.setBackgroundResource(R.drawable.my_layout_no_left);
+        }
+        subscriptionsOrganizer.setText(String.format(getString(R.string.subscribe_on_organizer), event.getOrganizer()));
 
-                if (isSubscribed) {
-                    mButtonAddToSubscriptions.setBackgroundResource(R.drawable.my_layout_no_left);
+        layoutSubscribe.setOnClickListener(v1 -> {
+            if (isSubscribed) {
+                layoutSubscribe.setBackgroundResource(R.drawable.my_layout_no_left);
 
-                    manager.remove(textViewOrganizer.getText().toString());
+                manager.remove(organizer.getText().toString());
 
-                    isSubscribed = false;
+                isSubscribed = false;
+            } else {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    int finalRadius = (int) Math.hypot(layoutSubscribe.getWidth() / 2, layoutSubscribe.getHeight() / 2);
+                    Animator animator = ViewAnimationUtils.createCircularReveal(layoutSubscribe,
+                            layoutSubscribe.getWidth() / 2, layoutSubscribe.getHeight() / 2, 0, finalRadius);
+                    layoutSubscribe.setBackgroundResource(R.color.colorPrimary);
+                    animator.start();
                 } else {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        int finalRadius = (int) Math.hypot(mButtonAddToSubscriptions.getWidth() / 2, mButtonAddToSubscriptions.getHeight() / 2);
-                        Animator animator = ViewAnimationUtils.createCircularReveal(mButtonAddToSubscriptions,
-                                mButtonAddToSubscriptions.getWidth() / 2, mButtonAddToSubscriptions.getHeight() / 2, 0, finalRadius);
-                        mButtonAddToSubscriptions.setBackgroundResource(R.color.colorPrimary);
-                        animator.start();
-                    } else
-                        mButtonAddToSubscriptions.setBackgroundResource(R.color.colorPrimary);
-
-                    manager.add(textViewOrganizer.getText().toString());
-
-                    isSubscribed = true;
+                    layoutSubscribe.setBackgroundResource(R.color.colorPrimary);
                 }
 
-            }
-        });
-        mLayout.setTranslationY(POSITION);
-        mLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(mLayout)).start();
+                manager.add(organizer.getText().toString());
 
-        Log.d("logf", "Single fragment created View");
+                isSubscribed = true;
+            }
+
+        });
+        rootLayout.setTranslationY(POSITION);
+        rootLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(rootLayout)).start();
+
         return v;
     }
 
-    // My functions -------------------------------------------------------------------------
     public MyEvent LoadEventFromDB(Context context, int ID) {
         DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_EVENTS);
         MyEvent event = dbManager.getEventFromDB(ID);
@@ -136,7 +143,6 @@ public class SingleFragment extends Fragment {
         return event;
     }
 
-    //----------------------------------------------------------------------------------------
     void processNullText() {
         if (event.getType() == null) event.setType("");
         if (event.getName() == null) event.setName("");
@@ -150,36 +156,22 @@ public class SingleFragment extends Fragment {
         if (event.getDescription() == null) event.setDescription("");
     }
 
-    //----------------------------------------------------------------------------------------
-    private String getDataTextView() {
-        String str;
-        String start_date = event.getStartDate();
+    private String getFinishDateString() {
+        String str = "";
         String finish_date = event.getFinishDate();
-        String start_time = "";
-        if (event.getStartTime().length() > 5)
-            start_time = event.getStartTime().substring(0, 5);
         String finish_time = "";
-        if (event.getStartTime().length() > 5)
+        if (event.getFinishTime().length() > 5) {
             finish_time = event.getFinishTime().substring(0, 5);
+        }
 
-        if (start_time.equals("00:00")) start_time = "";
         if (finish_time.equals("00:00")) finish_time = "";
-        if ((start_date.equals("")) && (finish_date.equals(""))) str = "";
-        else if ((start_date.equals(finish_date)) && (event.getFinishTime().equals("")))
-            str = "Время проводения: " + processTextDate(start_date) + " с " + start_time;
-        else if (start_date.equals(finish_date)) {
-            str = "Время проводения: " + processTextDate(start_date) + " с " + start_time;
-            if (!finish_time.equals("")) str += " до "
-                    + finish_time;
-        } else if (start_date.equals("")) str = "Окончание: " + processTextDate(finish_date)
-                + "  " + finish_time;
-        else
-            str = "Начало: " + processTextDate(start_date) + "  " + start_time + "\n"
-                    + "Окончание: " + processTextDate(finish_date) + "  " + finish_time;
+        if (!finish_date.isEmpty()) {
+            str = "Окончание: " + formatFinishDate(finish_date) + "  " + finish_time;
+        }
         return str;
     }
 
-    private String processTextDate(String str) {
+    private String formatFinishDate(String str) {
         String result;
         int day = Integer.parseInt(str.substring(8, 10));
         int month_int = Integer.parseInt(str.substring(5, 7));
@@ -188,18 +180,15 @@ public class SingleFragment extends Fragment {
         return result;
     }
 
-    //----------------------------------------------------------------------------------------
     void addEventToFavorite(MyEvent event) {
         DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
         dbManager.insertInDB(event);
         isFavorite = true;
     }
 
-    //------------------------------------------------------------------------------------
     void removeEventFromFavorite(MyEvent event) {
         DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
         dbManager.removeFromDB(event);
         isFavorite = false;
     }
-    //------------------------------------------------------------------------------------
 }

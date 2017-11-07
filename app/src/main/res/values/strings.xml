@@ -50,4 +50,5 @@
     <string name="subscriptions_description">Вы будете получать уведомление, когда появится событие от этих отганизаторов</string>
     <string name="add_to_subscriptions">Подписаться на обновления от </string>
     <string name="fragment_brand_text">По названию брэнда</string>
+    <string name="subscribe_on_organizer">Подписаться на обновления от %s</string>
 </resources>

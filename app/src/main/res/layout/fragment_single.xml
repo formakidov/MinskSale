@@ -8,14 +8,14 @@
     tools:context="com.ilavista.minsksale.SingleFragment">
 
     <LinearLayout
-        android:id="@+id/singleFragmentLayout"
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="10sp">
 
         <ImageView
-            android:id="@+id/singleFragmentImage"
+            android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -32,7 +32,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/singleFragmentTextName"
+                android:id="@+id/nameTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -45,7 +45,7 @@
                 android:textColor="@color/colorPrimaryText"/>
 
             <TextView
-                android:id="@+id/singleFragmentTextOrganizer"
+                android:id="@+id/organizerTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -57,7 +57,7 @@
                 android:textColor="@color/colorAccent"/>
 
             <TextView
-                android:id="@+id/singleFragmentTextLocation"
+                android:id="@+id/locationTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -71,7 +71,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:id="@+id/layout_add_to_subscribtions"
+                    android:id="@+id/layoutSubscribe"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -91,7 +91,7 @@
                         android:src="@drawable/ic_done_black_24dp"/>
 
                     <TextView
-                        android:id="@+id/textViewOrganizer"
+                        android:id="@+id/subscriptionsOrganizerTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="15"
@@ -104,7 +104,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_add_to_favorite"
+                    android:id="@+id/layoutFavorite"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -140,7 +140,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/singleFragmentTextDate"
+            android:id="@+id/textDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -152,7 +152,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
-            android:id="@+id/singleFragmentTextDescription"
+            android:id="@+id/descriptionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
