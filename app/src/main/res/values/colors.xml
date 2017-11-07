@@ -7,4 +7,5 @@
     <color name="colorPrimaryLightGrey">#999999</color>
     <color name="colorPrimaryLight">#ffffff</color>
     <color name="colorAccent">#ff9f19</color>
+    <color name="mailLink">#477DC0</color>
 </resources>

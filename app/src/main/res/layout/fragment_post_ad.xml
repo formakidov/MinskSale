@@ -18,12 +18,14 @@
         android:text="@string/post_adv_text"/>
 
     <TextView
+        android:id="@+id/mailTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/post_adv_mail"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="30sp"/>
+        android:textColor="@color/mailLink"
+        android:linksClickable="true"
+        android:textSize="24sp"/>
 
 </RelativeLayout>
