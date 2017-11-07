@@ -26,7 +26,7 @@ public class BrandsFragment extends Fragment {
     private Context context;
     private BrandsAdapter mAdapter;
     private AbsListView mListView;
-    private ArrayList<MyEvent> mEvents;
+    private ArrayList<Event> mEvents;
     private ArrayList<Organizer> mOrganizers;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Handler mHandler;
@@ -46,7 +46,7 @@ public class BrandsFragment extends Fragment {
         context = getActivity();
 
         // Set Swipe Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_brands_refresh);
+        mSwipeRefreshLayout = view.findViewById(R.id.fragment_brands_refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -64,14 +64,14 @@ public class BrandsFragment extends Fragment {
         });
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(R.id.fragment_brands_list);
+        mListView = view.findViewById(R.id.fragment_brands_list);
         mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView) view.findViewById(R.id.fragment_brands_item_text);
+                TextView textView = view.findViewById(R.id.fragment_brands_item_text);
 
                 Fragment fragment = new MainFragment();
                 Bundle arg = new Bundle();
@@ -92,7 +92,7 @@ public class BrandsFragment extends Fragment {
                     case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
                         Log.d("logf", "BrandsFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
                         mSwipeRefreshLayout.setRefreshing(false);
-                        LoadDataFromDB(context, mEvents, mOrganizers);
+                        loadData(mEvents, mOrganizers);
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                         animateListView(mListView);
                         break;
@@ -100,8 +100,8 @@ public class BrandsFragment extends Fragment {
                     case DownloadThread.NO_CONNECTION:
                         Log.d("logf", "BrandsFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
-                        MakeSnackBar("Отсутсвует подключение к Интернету");
-                        LoadDataFromDB(context, mEvents, mOrganizers);
+                        showSnackBar("Отсутсвует подключение к Интернету");
+                        loadData(mEvents, mOrganizers);
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                         break;
                 }
@@ -113,17 +113,17 @@ public class BrandsFragment extends Fragment {
             DownloadThread thread = new DownloadThread(context, ((MainActivity) context).getHandlerLeft(), mHandler);
             thread.start();
         } else {
-            LoadDataFromDB(context, mEvents, mOrganizers);
+            loadData(mEvents, mOrganizers);
         }
 
         Log.d("logf", "Brands fragment created View");
         return view;
     }
 
-    private void getOrganizersFromEvent(List<MyEvent> events, List<Organizer> mOrganizers) {
+    private void getOrganizersFromEvent(List<Event> events, List<Organizer> mOrganizers) {
         Boolean isNew;
         mOrganizers.clear();
-        for (MyEvent event : events) {
+        for (Event event : events) {
             isNew = true;
             for (Organizer organizer : mOrganizers) {
                 if (organizer.getName().equals(event.getOrganizer())) {
@@ -136,18 +136,17 @@ public class BrandsFragment extends Fragment {
         }
     }
 
-    private void MakeSnackBar(String text) {
+    private void showSnackBar(String text) {
         Snackbar snack = Snackbar.make(mSwipeRefreshLayout, text, Snackbar.LENGTH_SHORT);
         View view = snack.getView();
         view.setBackgroundResource(R.color.colorPrimary);
-        TextView snackTextView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackTextView = view.findViewById(android.support.design.R.id.snackbar_text);
         snackTextView.setTextColor(Color.parseColor("#6c440b"));
         snack.show();
     }
 
-    private void LoadDataFromDB(Context context, List<MyEvent> events, List<Organizer> organizers) {
-        DBManager dbManager = new DBManager(context, "Events");
-        dbManager.loadFromDBInMainThread(events, "All", null);
+    private void loadData(List<Event> events, List<Organizer> organizers) {
+        DBManager.loadEvents(events, "All");
         getOrganizersFromEvent(events, organizers);
     }
 
@@ -174,8 +173,8 @@ public class BrandsFragment extends Fragment {
             if (convertView == null)
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_brands_list_item, parent, false);
 
-            TextView textViewName = (TextView) convertView.findViewById(R.id.fragment_brands_item_text);
-            TextView textViewCount = (TextView) convertView.findViewById(R.id.fragment_brands_item_count_text);
+            TextView textViewName = convertView.findViewById(R.id.fragment_brands_item_text);
+            TextView textViewCount = convertView.findViewById(R.id.fragment_brands_item_count_text);
 
             textViewName.setText(organizer.getName());
             textViewCount.setText("событий: " + organizer.getEventsCount());

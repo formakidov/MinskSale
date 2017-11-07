@@ -26,7 +26,6 @@ public class SingleFragmentActivity extends AppCompatActivity {
 
         String options = getIntent().getStringExtra(MainActivity.EXTRA_MESSAGE_OPTIONS);
 
-        // starting MainFragment
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.single_fragment_container);
         if (fragment == null) {

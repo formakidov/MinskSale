@@ -1,6 +1,14 @@
 package com.ilavista.minsksale;
 
-public class MyEvent {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Event extends RealmObject {
+    public static final String FIELD_ID = "ID";
+    public static final String FIELD_ORGANIZER = "Organizer";
+    public static final String FIELD_TYPE = "Type";
+
+    @PrimaryKey
     private long ID;
     private String Type;
     private int Rate;
@@ -15,9 +23,7 @@ public class MyEvent {
     private String Location;
     private String Description;
 
-    public MyEvent() {
-        ID = -1;
-    }
+    public Event() {}
 
     public int getRate() {
         return Rate;

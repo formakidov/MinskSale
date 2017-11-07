@@ -59,8 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("logf", "onUpgrade database");
 
-        db.execSQL("create table Subscription ("
-                + "Organizer text" + ");");
+        // TODO: 11/7/17
     }
 
 }

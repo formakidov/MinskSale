@@ -26,7 +26,7 @@ public class MyReceiver extends BroadcastReceiver {
 
     public final static String RECEIVER_MESSAGE_ID = "com.ilavista.minsksale.TYPE";
 
-    private List<MyEvent> events;
+    private List<Event> events;
     private List<String> names;
     private Boolean isThereIsNewEvents = false;
 
@@ -42,7 +42,7 @@ public class MyReceiver extends BroadcastReceiver {
         Boolean isByReboot = ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction()));
         if (isByReboot){
             isEnabled = true;
-            Log.d("MyLog(MyReceiver)", "Receiver started after reboot");
+            Log.d("logf(MyReceiver)", "Receiver started after reboot");
         }
         else
         if (isByTime) isEnabled = true;
@@ -52,8 +52,8 @@ public class MyReceiver extends BroadcastReceiver {
                     = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-                Log.d("MyLog(MyReceiver)", "We've got INTERNET!");
-                LoadDataFromDB(context, events);
+                Log.d("logf(MyReceiver)", "We've got INTERNET!");
+                LoadDataFromDB(events);
                 getEventsNames(events, names);
 
                 DownloadDataTask downloadTask = new DownloadDataTask(context, events);
@@ -63,7 +63,7 @@ public class MyReceiver extends BroadcastReceiver {
                 SubscriptionManager.setNotifications(context, ProgramConfigs.getInstance(context).getNotificationPeriod());
                 ProgramConfigs.getInstance(context).disableInternetReceiver(context);
             } else {
-                Log.d("MyLog(MyReceiver)", "We don't have INTERNET!");
+                Log.d("logf(MyReceiver)", "We don't have INTERNET!");
                 ProgramConfigs.getInstance(context).enableInternetReceiver(context);
             }
         }
@@ -72,9 +72,9 @@ public class MyReceiver extends BroadcastReceiver {
     private class DownloadDataTask extends AsyncTask<String,Integer,String> {
 
         private Context context;
-        private List<MyEvent> events;
+        private List<Event> events;
 
-        public DownloadDataTask(Context context, List<MyEvent> events) {
+        public DownloadDataTask(Context context, List<Event> events) {
             this.events = events;
             this.context = context;
         }
@@ -82,7 +82,7 @@ public class MyReceiver extends BroadcastReceiver {
         @Override
         protected String doInBackground(String... sUrl) {
             String URL = ProgramConfigs.getInstance(context).getDataURL();
-            Log.d("MyLog(MyReceiver)","Trying to download data from: " + URL);
+            Log.d("logf(MyReceiver)","Trying to download data from: " + URL);
             InputStream input = null;
             HttpURLConnection connection = null;
 
@@ -104,9 +104,9 @@ public class MyReceiver extends BroadcastReceiver {
                 input = connection.getInputStream();
                 JSONDataLoader dataLoader = new JSONDataLoader();
                 events = dataLoader.getEventsFromJson(input);
-                Log.d("MyLog(MyReceiver)", "Loaded events: " + events.size());
+                Log.d("logf(MyReceiver)", "Loaded events: " + events.size());
             } catch (Exception e) {
-                Log.d("MyLog(MyReceiver)","Get exception: " + e.toString());
+                Log.d("logf(MyReceiver)","Get exception: " + e.toString());
                 return e.toString();
             } finally {
                 try {
@@ -132,7 +132,7 @@ public class MyReceiver extends BroadcastReceiver {
             Notification notification;
             int index = 0;
             List<String> listOfSubscriptions = new SubscriptionManager(context).getAll();
-            for (MyEvent event:events){
+            for (Event event:events){
                 if (!isEventInDB(event)) {
                     isThereIsNewEvents = true;
                     for (String str : listOfSubscriptions) {
@@ -168,32 +168,29 @@ public class MyReceiver extends BroadcastReceiver {
                 }
             }
             if (isThereIsNewEvents) {
-                Log.d("MyLog(MyReceiver)", "We have " + index + " new events");
-                loadDataInDB(context,events);
+                Log.d("logf(MyReceiver)", "We have " + index + " new events");
+                loadDataInDB(events);
             }
-            else Log.d("MyLog(MyReceiver)", "We have no new events");
+            else Log.d("logf(MyReceiver)", "We have no new events");
 
         }
 
     }
 
-    // My functions -------------------
-    public void loadDataInDB(Context context, List<MyEvent> events){
-        DBManager dbManager = new DBManager(context,"Events");
-        dbManager.loadInDB(events);
+    public void loadDataInDB(List<Event> events){
+        DBManager.insert(events);
     }
-    //------------------------------------------------------------------------------------
-    void LoadDataFromDB(Context context, List<MyEvent> events){
-        DBManager dbManager;
-        dbManager = new DBManager(context,"Events");
-        dbManager.loadFromDBInMainThread(events,"All",null);
+
+    void LoadDataFromDB(List<Event> events){
+        DBManager.loadEvents(events,"All");
     }
-    void getEventsNames(List<MyEvent> events,List<String> names){
-        for (MyEvent event:events)
+
+    void getEventsNames(List<Event> events, List<String> names){
+        for (Event event:events)
             names.add(event.getName());
     }
 
-    boolean isEventInDB(MyEvent event){
+    boolean isEventInDB(Event event){
         String name = event.getName();
         for (String str: names){
             if (str.equals(name))
