@@ -73,8 +73,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         final SubscriptionManager manager = new SubscriptionManager(this);
         isSubscribed = manager.isInSubscriptions(event.getOrganizer());
 
-        processNullText();
-
         Bitmap img = BitmapFactory.decodeFile(getFilesDir() + event.getImageName());
         image.setImageBitmap(img);
         textViewName.setText(event.getName());
@@ -148,19 +146,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         Event event = DBManager.getEvent(ID);
         isFavorite = DBManager.isFavorite(ID);
         return event;
-    }
-
-    void processNullText() {
-        if (event.getType() == null) event.setType("");
-        if (event.getName() == null) event.setName("");
-        if (event.getOrganizer() == null) event.setOrganizer("");
-        if (event.getStartDate() == null) event.setStartDate("");
-        if (event.getStartTime() == null) event.setStartTime("");
-        if (event.getFinishDate() == null) event.setFinishDate("");
-        if (event.getFinishTime() == null) event.setFinishTime("");
-        if (event.getImageName() == null) event.setImageName("");
-        if (event.getLocation() == null) event.setLocation("");
-        if (event.getDescription() == null) event.setDescription("");
     }
 
     private String getFinishDateString() {

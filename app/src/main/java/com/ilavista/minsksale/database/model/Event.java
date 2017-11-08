@@ -12,18 +12,18 @@ public class Event extends RealmObject {
     @Required
     @PrimaryKey
     private long ID;
-    private String Type;
+    private String Type = "";
     private int Rate;
-    private String Name;
-    private String Organizer;
-    private String StartDate;
-    private String StartTime;
-    private String FinishDate;
-    private String FinishTime;
-    private String ImageURL;
-    private String ImageName;
-    private String Location;
-    private String Description;
+    private String Name = "";
+    private String Organizer = "";
+    private String StartDate = "";
+    private String StartTime = "";
+    private String FinishDate = "";
+    private String FinishTime = "";
+    private String ImageURL = "";
+    private String ImageName = "";
+    private String Location = "";
+    private String Description = "";
 
     public int getRate() {
         return Rate;
