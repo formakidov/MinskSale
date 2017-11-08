@@ -10,13 +10,13 @@ import io.realm.Sort;
 public class DBManager {
 
     public static void insert(final List<Event> events) {
-        realm().executeTransactionAsync(realm -> realm.copyToRealm(events));
+        realm().executeTransactionAsync(realm -> realm.insertOrUpdate(events));
     }
 
     public static void insertFavorite(final Event event) {
         FavoriteEvent favoriteEvent = new FavoriteEvent();
         favoriteEvent.setId(event.getID());
-        realm().copyToRealm(favoriteEvent);
+        realm().insertOrUpdate(favoriteEvent);
     }
 
     public static void removeFavorite(final Event event) {

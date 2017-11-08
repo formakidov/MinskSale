@@ -58,7 +58,7 @@ public class SingleFragment extends Fragment {
         int POSITION = getArguments().getInt(MainFragment.EXTRA_MESSAGE_POSITION, 0);
 
 
-        event = LoadEventFromDB(getActivity(), ID);
+        event = LoadEventFromDB(ID);
 
         final SubscriptionManager manager = new SubscriptionManager(getActivity());
 
@@ -136,7 +136,16 @@ public class SingleFragment extends Fragment {
         return v;
     }
 
-    public Event LoadEventFromDB(Context context, int ID) {
+    private String formatFinishDate(String str) {
+        String result;
+        int day = Integer.parseInt(str.substring(8, 10));
+        int month_int = Integer.parseInt(str.substring(5, 7));
+        String month = new DateFormatSymbols().getMonths()[month_int - 1];
+        result = "" + day + " " + month + " " + str.substring(0, 4);
+        return result;
+    }
+
+    public Event LoadEventFromDB(int ID) {
         Event event = DBManager.getEvent(ID);
         isFavorite = DBManager.isFavorite(ID);
         return event;
@@ -168,15 +177,6 @@ public class SingleFragment extends Fragment {
             str = "Окончание: " + formatFinishDate(finish_date) + "  " + finish_time;
         }
         return str;
-    }
-
-    private String formatFinishDate(String str) {
-        String result;
-        int day = Integer.parseInt(str.substring(8, 10));
-        int month_int = Integer.parseInt(str.substring(5, 7));
-        String month = new DateFormatSymbols().getMonths()[month_int - 1];
-        result = "" + day + " " + month + " " + str.substring(0, 4);
-        return result;
     }
 
     void addEventToFavorite(Event event) {

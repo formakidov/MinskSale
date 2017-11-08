@@ -22,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventDetailsActivity extends AppCompatActivity {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.nameTv)
     TextView textViewName;
     @BindView(R.id.organizerTv)
@@ -42,10 +44,8 @@ public class EventDetailsActivity extends AppCompatActivity {
     LinearLayout rootLayout;
     @BindView(R.id.layoutFavorite)
     LinearLayout layoutFavorite;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
-    private MyEvent event;
+    private Event event;
     private Boolean isFavorite = false;
     private Boolean isSubscribed = false;
 
@@ -62,7 +62,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         int ID = intent.getIntExtra(MainFragment.EXTRA_MESSAGE_ID, -1);
         int POSITION = intent.getIntExtra(MainFragment.EXTRA_MESSAGE_POSITION, 0);
 
-        event = LoadEventFromDB(this, ID);
+        event = LoadEventFromDB(ID);
 
         // TODO: 11/8/17
         final SubscriptionManager manager = new SubscriptionManager(this);
@@ -139,10 +139,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         rootLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(rootLayout)).start();
     }
 
-    public MyEvent LoadEventFromDB(Context context, int ID) {
-        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_EVENTS);
-        MyEvent event = dbManager.getEventFromDB(ID);
-        isFavorite = dbManager.isEventFavorite(ID);
+    public Event LoadEventFromDB(int ID) {
+        Event event = DBManager.getEvent(ID);
+        isFavorite = DBManager.isFavorite(ID);
         return event;
     }
 
@@ -183,15 +182,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         return result;
     }
 
-    void addEventToFavorite(MyEvent event) {
-        DBManager dbManager = new DBManager(this, DBHelper.DATABASE_TABLE_FAVORITE);
-        dbManager.insertInDB(event);
+    void addEventToFavorite(Event event) {
+        DBManager.insertFavorite(event);
         isFavorite = true;
     }
 
-    void removeEventFromFavorite(MyEvent event) {
-        DBManager dbManager = new DBManager(this, DBHelper.DATABASE_TABLE_FAVORITE);
-        dbManager.removeFromDB(event);
+    void removeEventFromFavorite(Event event) {
+        DBManager.removeFavorite(event);
         isFavorite = false;
     }
 

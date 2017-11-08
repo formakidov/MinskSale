@@ -23,8 +23,6 @@ public class Event extends RealmObject {
     private String Location;
     private String Description;
 
-    public Event() {}
-
     public int getRate() {
         return Rate;
     }
