@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.network;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,6 +12,14 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.ilavista.minsksale.Constants;
+import com.ilavista.minsksale.activity.MainActivity;
+import com.ilavista.minsksale.MyReceiver;
+import com.ilavista.minsksale.R;
+import com.ilavista.minsksale.SubscriptionManager;
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.model.Event;
 
 import java.io.File;
 import java.io.FileOutputStream;

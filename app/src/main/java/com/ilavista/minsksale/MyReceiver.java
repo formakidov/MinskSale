@@ -15,6 +15,11 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.ilavista.minsksale.activity.MainActivity;
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.network.JSONDataLoader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -38,15 +43,16 @@ public class MyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Boolean isEnabled;
-        Boolean isByTime = intent.getBooleanExtra(SubscriptionManager.NOTIFICATION_BY_TIME,false);
+        Boolean isByTime = intent.getBooleanExtra(SubscriptionManager.NOTIFICATION_BY_TIME, false);
         Boolean isByReboot = ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction()));
-        if (isByReboot){
+        if (isByReboot) {
             isEnabled = true;
             Log.d("logf(MyReceiver)", "Receiver started after reboot");
+        } else if (isByTime) {
+            isEnabled = true;
+        } else {
+            isEnabled = ProgramConfigs.getInstance(context).isInternetReceiverEnabled();
         }
-        else
-        if (isByTime) isEnabled = true;
-        else isEnabled = ProgramConfigs.getInstance(context).isInternetReceiverEnabled();
         if (isEnabled) {
             ConnectivityManager connectivityManager
                     = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -69,7 +75,7 @@ public class MyReceiver extends BroadcastReceiver {
         }
     }
 
-    private class DownloadDataTask extends AsyncTask<String,Integer,String> {
+    private class DownloadDataTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
         private List<Event> events;
@@ -82,7 +88,7 @@ public class MyReceiver extends BroadcastReceiver {
         @Override
         protected String doInBackground(String... sUrl) {
             String URL = ProgramConfigs.getInstance(context).getDataURL();
-            Log.d("logf(MyReceiver)","Trying to download data from: " + URL);
+            Log.d("logf(MyReceiver)", "Trying to download data from: " + URL);
             InputStream input = null;
             HttpURLConnection connection = null;
 
@@ -91,8 +97,6 @@ public class MyReceiver extends BroadcastReceiver {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
-                // expect HTTP 200 OK, so we don't mistakenly save error report
-                // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.d("logf", "Get error report: " + "Server returned HTTP " + connection.getResponseCode()
                             + " " + connection.getResponseMessage());
@@ -106,7 +110,7 @@ public class MyReceiver extends BroadcastReceiver {
                 events = dataLoader.getEventsFromJson(input);
                 Log.d("logf(MyReceiver)", "Loaded events: " + events.size());
             } catch (Exception e) {
-                Log.d("logf(MyReceiver)","Get exception: " + e.toString());
+                Log.d("logf(MyReceiver)", "Get exception: " + e.toString());
                 return e.toString();
             } finally {
                 try {
@@ -115,8 +119,9 @@ public class MyReceiver extends BroadcastReceiver {
                 } catch (IOException ignored) {
                 }
 
-                if (connection != null)
+                if (connection != null) {
                     connection.disconnect();
+                }
             }
             return null;
         }
@@ -132,13 +137,13 @@ public class MyReceiver extends BroadcastReceiver {
             Notification notification;
             int index = 0;
             List<String> listOfSubscriptions = new SubscriptionManager(context).getAll();
-            for (Event event:events){
+            for (Event event : events) {
                 if (!isEventInDB(event)) {
                     isThereIsNewEvents = true;
                     for (String str : listOfSubscriptions) {
                         if (str.equals(event.getOrganizer())) {
-                            Intent intent = new Intent(context,MainActivity.class);
-                            intent.putExtra(RECEIVER_MESSAGE_ID,event.getID());
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.putExtra(RECEIVER_MESSAGE_ID, event.getID());
                             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 notification = new Notification.Builder(context)
@@ -170,31 +175,34 @@ public class MyReceiver extends BroadcastReceiver {
             if (isThereIsNewEvents) {
                 Log.d("logf(MyReceiver)", "We have " + index + " new events");
                 loadDataInDB(events);
+            } else {
+                Log.d("logf(MyReceiver)", "We have no new events");
             }
-            else Log.d("logf(MyReceiver)", "We have no new events");
 
         }
 
     }
 
-    public void loadDataInDB(List<Event> events){
+    public void loadDataInDB(List<Event> events) {
         DBManager.insert(events);
     }
 
-    void LoadDataFromDB(List<Event> events){
-        DBManager.loadEvents(events,"All");
+    void LoadDataFromDB(List<Event> events) {
+        DBManager.loadEvents(events, "All");
     }
 
-    void getEventsNames(List<Event> events, List<String> names){
-        for (Event event:events)
+    void getEventsNames(List<Event> events, List<String> names) {
+        for (Event event : events) {
             names.add(event.getName());
+        }
     }
 
-    boolean isEventInDB(Event event){
+    boolean isEventInDB(Event event) {
         String name = event.getName();
-        for (String str: names){
-            if (str.equals(name))
+        for (String str : names) {
+            if (str.equals(name)) {
                 return true;
+            }
         }
         return false;
     }

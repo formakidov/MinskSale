@@ -1,6 +1,5 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +19,14 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.utils.InnerAnimatorListener;
+import com.ilavista.minsksale.activity.MainActivity;
+import com.ilavista.minsksale.R;
+import com.ilavista.minsksale.activity.EventDetailsActivity;
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.network.DownloadThread;
 
 import java.util.ArrayList;
 import java.util.List;

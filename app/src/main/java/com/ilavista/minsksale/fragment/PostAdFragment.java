@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.fragment;
 
 
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.R;
 
 public class PostAdFragment extends Fragment {
 

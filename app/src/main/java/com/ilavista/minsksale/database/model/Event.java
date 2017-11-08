@@ -1,13 +1,15 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.database.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 public class Event extends RealmObject {
     public static final String FIELD_ID = "ID";
     public static final String FIELD_ORGANIZER = "Organizer";
     public static final String FIELD_TYPE = "Type";
 
+    @Required
     @PrimaryKey
     private long ID;
     private String Type;

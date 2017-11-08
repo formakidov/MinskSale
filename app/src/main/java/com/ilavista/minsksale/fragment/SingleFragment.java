@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.fragment;
 
 import android.animation.Animator;
 import android.content.Context;
@@ -13,6 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.utils.InnerAnimatorListener;
+import com.ilavista.minsksale.R;
+import com.ilavista.minsksale.SubscriptionManager;
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.model.Event;
 
 import java.text.DateFormatSymbols;
 

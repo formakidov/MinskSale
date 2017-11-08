@@ -1,12 +1,10 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.activity;
 
 import android.animation.Animator;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +13,13 @@ import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.utils.InnerAnimatorListener;
+import com.ilavista.minsksale.fragment.MainFragment;
+import com.ilavista.minsksale.R;
+import com.ilavista.minsksale.SubscriptionManager;
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.model.Event;
 
 import java.text.DateFormatSymbols;
 

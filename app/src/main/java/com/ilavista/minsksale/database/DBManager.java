@@ -1,4 +1,7 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.database;
+
+import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.database.model.FavoriteEvent;
 
 import java.util.ArrayList;
 import java.util.List;

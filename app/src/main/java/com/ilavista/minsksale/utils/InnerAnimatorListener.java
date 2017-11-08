@@ -1,9 +1,9 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.utils;
 
 import android.animation.Animator;
 import android.view.View;
 
-class InnerAnimatorListener implements Animator.AnimatorListener {
+public class InnerAnimatorListener implements Animator.AnimatorListener {
 
     private View v;
 

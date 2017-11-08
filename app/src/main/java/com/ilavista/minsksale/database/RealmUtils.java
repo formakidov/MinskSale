@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.database;
 
 import android.content.Context;
 
@@ -15,7 +15,6 @@ public class RealmUtils {
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(SCHEMA_VERSION)
-                .migration(new MigrationImpl())
                 .build();
         Realm.setDefaultConfiguration(config);
     }
@@ -56,15 +55,7 @@ public class RealmUtils {
     private static class MigrationImpl implements RealmMigration {
         @Override
         public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-            if (oldVersion < 5) {
-                // TODO: 11/7/17  
-            }
-        }
 
-        private void safeDelete(DynamicRealm realm, String className) {
-            try {
-                realm.delete(className);
-            } catch (Exception ignored) {}
         }
     }
 }

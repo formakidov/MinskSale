@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
     android:orientation="horizontal"
-    tools:context="com.ilavista.minsksale.SingleFragment">
+    tools:context="com.ilavista.minsksale.fragment.SingleFragment">
 
     <LinearLayout
         android:id="@+id/rootLayout"

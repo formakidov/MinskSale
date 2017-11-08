@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.fragment;
 
 
 import android.content.Context;
@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.R;
+import com.ilavista.minsksale.SubscriptionManager;
 
 import java.util.List;
 

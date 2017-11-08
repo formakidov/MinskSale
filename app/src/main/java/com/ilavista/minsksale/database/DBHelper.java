@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

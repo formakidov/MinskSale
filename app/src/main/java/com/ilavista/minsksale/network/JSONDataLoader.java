@@ -1,8 +1,9 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.network;
 
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ilavista.minsksale.database.model.Event;
 
 import java.io.BufferedReader;
 import java.io.IOException;

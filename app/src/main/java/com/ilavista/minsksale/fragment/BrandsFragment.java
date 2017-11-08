@@ -1,4 +1,4 @@
-package com.ilavista.minsksale;
+package com.ilavista.minsksale.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,10 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.network.DownloadThread;
+import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.utils.InnerAnimatorListener;
+import com.ilavista.minsksale.activity.MainActivity;
+import com.ilavista.minsksale.ProgramConfigs;
+import com.ilavista.minsksale.R;
 
 import java.util.ArrayList;
 import java.util.List;
