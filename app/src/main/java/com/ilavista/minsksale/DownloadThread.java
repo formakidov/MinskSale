@@ -31,8 +31,7 @@ public class DownloadThread extends Thread {
 
     private Context context;
     private Handler mHandlerLeft, mHandlerRight;
-    private String URL;
-    private List<MyEvent> events;
+    private List<Event> events;
     private List<String> names;
     List<String> listOfImagesOnDevice;
 
@@ -40,26 +39,25 @@ public class DownloadThread extends Thread {
         this.context = context;
         this.mHandlerLeft = mHandlerLeft;
         this.mHandlerRight = mHandlerRight;
-        URL = Constants.DATA_URL;
     }
 
     public void run() {
-        Log.d("MyLog_Downloading", "Starting DownloadThread");
+        Log.d("logf_Downloading", "Starting DownloadThread");
         listOfImagesOnDevice = getListOfImagesOnDevice();
-        String result = DownloadData(URL, null);
+        String result = DownloadData(Constants.DATA_URL, null);
 
         if (result != null) {
-            Log.d("MyLog_Downloading", "Main Data is not downloaded");
+            Log.d("logf_Downloading", "Main Data is not downloaded");
             if (mHandlerLeft != null) mHandlerLeft.sendEmptyMessage(NO_CONNECTION);
             if (mHandlerRight != null) mHandlerRight.sendEmptyMessage(NO_CONNECTION);
             return;
         }
 
         checkForSubscriptionEvents();
-        loadDataInDB(context, events);
+        loadDataInDB(events);
 
         // downloading images
-        for (MyEvent event : events) {
+        for (Event event : events) {
             //remove image from list of images
             Iterator it = listOfImagesOnDevice.iterator();
             while (it.hasNext()) {
@@ -76,17 +74,17 @@ public class DownloadThread extends Thread {
                     if (mHandlerRight != null) mHandlerRight.sendEmptyMessage(NO_CONNECTION);
                     return;
                 }
-                Log.d("MyLog_Downloading", "Image downloaded " + event.getImageName());
+                Log.d("logf_Downloading", "Image downloaded " + event.getImageName());
             }
         }
 
         // deleting images
         boolean delete_result = false;
         for (String str : listOfImagesOnDevice) {
-            Log.d("MyLog_Downloading", "Deleting files");
+            Log.d("logf_Downloading", "Deleting files");
             File picture = new File(context.getFilesDir() + str);
             if (picture.exists()) delete_result = picture.delete();
-            if (delete_result) Log.d("MyLog_Downloading", "File deleted:" + str);
+            if (delete_result) Log.d("logf_Downloading", "File deleted:" + str);
         }
 
         if (mHandlerLeft != null) mHandlerLeft.sendEmptyMessage(FINISH_DOWNLOADING_SUCCESSFULLY);
@@ -94,21 +92,15 @@ public class DownloadThread extends Thread {
 
     }
 
-    // functions ---------------------------------------------------------------------------
-    private void loadDataInDB(Context context, List<MyEvent> events) {
-        DBManager dbManager = new DBManager(context, "Events");
-        dbManager.loadInDBInMainThread(events);
+    private void loadDataInDB(List<Event> events) {
+        DBManager.insert(events);
     }
 
-    //------------------------------------------------------------------------------------
-    private void LoadDataFromDB(Context context, List<MyEvent> events) {
-        DBManager dbManager;
-        dbManager = new DBManager(context, "Events");
-        dbManager.loadFromDBInMainThread(events, "All", null);
+    private void LoadDataFromDB(List<Event> events) {
+        DBManager.loadEvents(events, "All");
     }
 
-    //------------------------------------------------------------------------------------
-    private boolean isEventInDB(MyEvent event) {
+    private boolean isEventInDB(Event event) {
         String name = event.getName();
         for (String str : names) {
             if (str.equals(name))
@@ -117,21 +109,19 @@ public class DownloadThread extends Thread {
         return false;
     }
 
-    //------------------------------------------------------------------------------------
     private List<String> getListOfImagesOnDevice() {
-        List<MyEvent> eventsOnDevice = new ArrayList<>();
-        LoadDataFromDB(context, eventsOnDevice);
+        List<Event> eventsOnDevice = new ArrayList<>();
+        LoadDataFromDB(eventsOnDevice);
         List<String> imageFilesOnDevice = new ArrayList<>();
-        for (MyEvent event : eventsOnDevice) {
+        for (Event event : eventsOnDevice) {
             imageFilesOnDevice.add(event.getImageName());
         }
         return imageFilesOnDevice;
     }
 
-    //------------------------------------------------------------------------------------
     @Nullable
     private String DownloadData(String URL, String fileName) {
-        Log.d("MyLog_Downloading", "Trying to download data from: " + URL);
+        Log.d("logf_Downloading", "Trying to download data from: " + URL);
         InputStream input = null;
         OutputStream output;
         HttpURLConnection connection = null;
@@ -141,10 +131,8 @@ public class DownloadThread extends Thread {
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
-            // expect HTTP 200 OK, so we don't mistakenly save error report
-            // instead of the file
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Log.d("MyLog_Downloading", "Get error report: " + "Server returned HTTP " + connection.getResponseCode()
+                Log.d("logf_Downloading", "Get error report: " + "Server returned HTTP " + connection.getResponseCode()
                         + " " + connection.getResponseMessage());
                 return "Server returned HTTP " + connection.getResponseCode()
                         + " " + connection.getResponseMessage();
@@ -155,7 +143,7 @@ public class DownloadThread extends Thread {
             if (fileName == null) {
                 JSONDataLoader dataLoader = new JSONDataLoader();
                 events = dataLoader.getEventsFromJson(input);
-                Log.d("MyLog_Downloading", "Loaded events: " + events.size());
+                Log.d("logf_Downloading", "Loaded events: " + events.size());
             } else {
                 output = new FileOutputStream(context.getFilesDir() + fileName);
                 byte data[] = new byte[4096];
@@ -165,7 +153,7 @@ public class DownloadThread extends Thread {
                 }
             }
         } catch (Exception e) {
-            Log.d("MyLog_Downloading", "Get exception: " + e.toString());
+            Log.d("logf_Downloading", "Get exception: " + e.toString());
             return e.toString();
         } finally {
             try {
@@ -180,21 +168,20 @@ public class DownloadThread extends Thread {
         return null;
     }
 
-    //------------------------------------------------------------------------------------
     private void checkForSubscriptionEvents() {
         names = new ArrayList<>();
         Boolean isThereIsNewEvents = false;
-        List<MyEvent> eventsOld = new ArrayList<>();
-        LoadDataFromDB(context, eventsOld);
+        List<Event> eventsOld = new ArrayList<>();
+        LoadDataFromDB(eventsOld);
 
-        for (MyEvent event : eventsOld)
+        for (Event event : eventsOld)
             names.add(event.getName());
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification;
         int index = 0;
         List<String> listOfSubscriptions = new SubscriptionManager(context).getAll();
-        for (MyEvent event : events) {
+        for (Event event : events) {
             if (!isEventInDB(event)) {
                 isThereIsNewEvents = true;
                 for (String str : listOfSubscriptions) {
@@ -230,8 +217,8 @@ public class DownloadThread extends Thread {
             }
         }
         if (isThereIsNewEvents) {
-            Log.d("MyLog_Downloading", "We have " + index + " new events");
-            loadDataInDB(context, events);
-        } else Log.d("MyLog_Downloading", "We have no new events");
+            Log.d("logf_Downloading", "We have " + index + " new events");
+            loadDataInDB(events);
+        } else Log.d("logf_Downloading", "We have no new events");
     }
 }

@@ -24,6 +24,7 @@ public class SubscriptionManager {
     }
 
     public List<String> getAll() {
+        // TODO: 11/7/17
         String string;
         List<String> subscriptions = new ArrayList<>();
         DBHelper dbHelper = new DBHelper(context);

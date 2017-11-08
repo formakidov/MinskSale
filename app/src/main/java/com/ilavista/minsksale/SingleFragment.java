@@ -43,7 +43,7 @@ public class SingleFragment extends Fragment {
 
     Context context;
 
-    private MyEvent event;
+    private Event event;
     private Boolean isFavorite = false;
     private Boolean isSubscribed = false;
 
@@ -136,10 +136,9 @@ public class SingleFragment extends Fragment {
         return v;
     }
 
-    public MyEvent LoadEventFromDB(Context context, int ID) {
-        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_EVENTS);
-        MyEvent event = dbManager.getEventFromDB(ID);
-        isFavorite = dbManager.isEventFavorite(ID);
+    public Event LoadEventFromDB(Context context, int ID) {
+        Event event = DBManager.getEvent(ID);
+        isFavorite = DBManager.isFavorite(ID);
         return event;
     }
 
@@ -180,15 +179,13 @@ public class SingleFragment extends Fragment {
         return result;
     }
 
-    void addEventToFavorite(MyEvent event) {
-        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
-        dbManager.insertInDB(event);
+    void addEventToFavorite(Event event) {
+        DBManager.insertFavorite(event);
         isFavorite = true;
     }
 
-    void removeEventFromFavorite(MyEvent event) {
-        DBManager dbManager = new DBManager(context, DBHelper.DATABASE_TABLE_FAVORITE);
-        dbManager.removeFromDB(event);
+    void removeEventFromFavorite(Event event) {
+        DBManager.removeFavorite(event);
         isFavorite = false;
     }
 }

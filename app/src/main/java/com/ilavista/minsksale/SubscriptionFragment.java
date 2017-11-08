@@ -68,15 +68,12 @@ public class SubscriptionFragment extends Fragment {
 
             mButton = new ImageView(context);
             mButton.setBackgroundResource(R.drawable.ic_clear_black_24dp);
-            mButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String s = String.valueOf(single_subscription);
-                    SubscriptionManager manager = new SubscriptionManager(context);
-                    manager.remove(s);
-                    Log.d("logf", "Remove " + s);
-                    onResume();
-                }
+            mButton.setOnClickListener(v -> {
+                String s = String.valueOf(single_subscription);
+                SubscriptionManager manager = new SubscriptionManager(context);
+                manager.remove(s);
+                Log.d("logf", "Remove " + s);
+                onResume();
             });
 
             mLayoutLeft.addView(mButton);

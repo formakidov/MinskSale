@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
     private EventAdapter mAdapter;
     private MainActivity activity;
     private AbsListView mListView;
-    private ArrayList<MyEvent> mEvents;
+    private ArrayList<Event> mEvents;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView mTextDownloading;
 
@@ -80,7 +80,7 @@ public class MainFragment extends Fragment {
                     case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
                         Log.d("logf", "MainFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
                         mSwipeRefreshLayout.setRefreshing(false);
-                        LoadDataFromDB(activity, mEvents, type);
+                        loadData(mEvents, type);
                         animateListView(mListView);
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                         break;
@@ -88,8 +88,8 @@ public class MainFragment extends Fragment {
                     case DownloadThread.NO_CONNECTION:
                         Log.d("logf", "MainFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
-                        MakeSnackBar("Отсутсвует подключение к Интернету");
-                        LoadDataFromDB(activity, mEvents, type);
+                        showSnackBar("Отсутсвует подключение к Интернету");
+                        loadData(mEvents, type);
                         break;
                 }
                 mTextDownloading.setVisibility(View.GONE);
@@ -107,7 +107,7 @@ public class MainFragment extends Fragment {
         }
 
         mTextDownloading.setVisibility(View.GONE);
-        LoadDataFromDB(activity, mEvents, type);
+        loadData(mEvents, type);
 
         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
 
@@ -116,7 +116,7 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    private void MakeSnackBar(String text) {
+    private void showSnackBar(String text) {
         Snackbar snack = Snackbar.make(mSwipeRefreshLayout, text, Snackbar.LENGTH_SHORT);
         View view = snack.getView();
         view.setBackgroundResource(R.color.colorPrimary);
@@ -125,7 +125,7 @@ public class MainFragment extends Fragment {
         snack.show();
     }
 
-    private class EventAdapter extends ArrayAdapter<MyEvent> {
+    private class EventAdapter extends ArrayAdapter<Event> {
 
         int prevPosition;
         boolean animate;
@@ -137,14 +137,14 @@ public class MainFragment extends Fragment {
             this.animate = animate;
         }
 
-        public EventAdapter(ArrayList<MyEvent> events) {
+        public EventAdapter(ArrayList<Event> events) {
             super(getActivity(), 0, events);
             prevPosition = 0;
         }
 
         @Override
         public View getView(int position, View convertView, final ViewGroup parent) {
-            MyEvent event = getItem(position);
+            Event event = getItem(position);
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
@@ -180,13 +180,12 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void LoadDataFromDB(Context context, List<MyEvent> events, String type) {
-        DBManager dbManager;
-        if (type.equals("selected"))
-            dbManager = new DBManager(context, "MyFavorite");
-        else
-            dbManager = new DBManager(context, "Events");
-        dbManager.loadFromDBInMainThread(events, type, organizer);
+    private void loadData(List<Event> events, String type) {
+        if (type.equals("selected")) {
+            DBManager.loadFavorite(events, type, organizer);
+        } else {
+            DBManager.loadEvents(events, type, organizer);
+        }
     }
 
     private void animateListView(AbsListView list) {

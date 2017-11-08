@@ -29,7 +29,7 @@ public class ProgramConfigs {
         notificationPeriod = sp.getInt(PREFERENCES_GET_PERIOD,12*60*60*1000);
         isInternetReceiverEnabled = sp.getBoolean(PREFERENCES_GET_INTERNET_RECEIVER, false);
         isFirstStart = true;
-        Log.d("MyLog(ProgramConfigs)", "Loaded notificationPeriod: " + notificationPeriod / 1000 + " sec");
+        Log.d("logf(ProgramConfigs)", "Loaded notificationPeriod: " + notificationPeriod / 1000 + " sec");
     }
 
     public void save(Context context){
@@ -70,13 +70,13 @@ public class ProgramConfigs {
     public void enableInternetReceiver(Context context) {
         this.isInternetReceiverEnabled = true;
         save(context);
-        Log.d("MyLog(ProgramConfigs)","Internet Receiver enabled");
+        Log.d("logf(ProgramConfigs)","Internet Receiver enabled");
     }
 
     public void disableInternetReceiver(Context context) {
         this.isInternetReceiverEnabled = false;
         save(context);
-        Log.d("MyLog(ProgramConfigs)", "Internet Receiver disabled");
+        Log.d("logf(ProgramConfigs)", "Internet Receiver disabled");
     }
 
     public void setNotificationPeriod(int notificationPeriod) {

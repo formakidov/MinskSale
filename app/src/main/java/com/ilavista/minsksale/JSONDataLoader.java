@@ -20,14 +20,14 @@ public class JSONDataLoader {
     }
 
 
-    public List<MyEvent> getEventsFromJson(InputStream in) throws UnsupportedEncodingException {
+    public List<Event> getEventsFromJson(InputStream in) throws UnsupportedEncodingException {
         String jSonValue = getStringFromInputStream(in);
         Gson jSon = new Gson();
 
-        Type listType = new TypeToken<List<MyEvent>>() {
+        Type listType = new TypeToken<List<Event>>() {
         }.getType();
 
-        ArrayList<MyEvent> events;
+        ArrayList<Event> events;
         events = jSon.fromJson(jSonValue, listType);
 
         return events;
