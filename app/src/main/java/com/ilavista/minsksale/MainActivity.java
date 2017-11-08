@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private boolean isEventOpen;
     private String type;
     private String organizer;
-    private int ListViewPosition;
+    private int listViewPosition;
     private ViewPager pager;
     private MyFragmentPagerAdapter pagerAdapter;
     private long extraID;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public final static String EXTRA_MESSAGE_LIST_POSITION = "com.ilavista.minsksale.LIST_POSITION";
 
     public void setListViewPosition(int listViewPosition) {
-        ListViewPosition = listViewPosition;
+        this.listViewPosition = listViewPosition;
     }
 
     public void setIsEventOpen(boolean isEventOpen) {
@@ -82,27 +82,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("logf", "Main Activity onCreate");
-        ListViewPosition = 0;
+        listViewPosition = 0;
 
         SubscriptionManager.setNotifications(this, ProgramConfigs.getInstance(this).getNotificationPeriod());
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         menu = navigationView.getMenu();
 
         extraID = getIntent().getLongExtra(MyReceiver.RECEIVER_MESSAGE_ID, -1);
 
-        pager = (ViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         pager.setAdapter(pagerAdapter);
 
@@ -129,41 +129,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (position == 0) {
                     switch (type) {
                         case "clothes":
-                            menu.findItem(R.id.nav_clothes).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_clothes);
                             break;
                         case "shoes":
-                            menu.findItem(R.id.nav_shoes).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_shoes);
                             break;
                         case "jewellery":
-                            menu.findItem(R.id.nav_jewellery).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_jewellery);
                             break;
                         case "electronics":
-                            menu.findItem(R.id.nav_electronics).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_electronics);
                             break;
                         case "others":
-                            menu.findItem(R.id.nav_others).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_others);
                             break;
                         case "cafe":
-                            menu.findItem(R.id.nav_cafe).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_cafe);
                             break;
                         case "sport":
-                            menu.findItem(R.id.nav_sport).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_sport);
                             break;
                         case "entertainment":
-                            menu.findItem(R.id.nav_entertainment).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_entertainment);
                             break;
                         case "selected":
-                            menu.findItem(R.id.nav_selected).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_selected);
                             break;
                         case "subscription":
-                            menu.findItem(R.id.nav_subscription).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_subscription);
                             break;
                         default:
-                            menu.findItem(R.id.nav_all).setChecked(true);
+                            selectNavigationItemChecked(R.id.nav_all);
                     }
-                } else if (position == 1)
-                    menu.findItem(R.id.nav_brand).setChecked(true);
-
+                } else if (position == 1) {
+                    selectNavigationItemChecked(R.id.nav_brand);
+                }
             }
 
             @Override
@@ -175,18 +175,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (isEventOpen) {
-            if (type == null) type = "All";
+            if (type == null) {
+                type = "All";
+            }
             isEventOpen = false;
             Fragment fragment = new MainFragment();
             Bundle arg = new Bundle();
             arg.putString(EXTRA_MESSAGE_TYPE, type);
-            if (type.equals("by_organizer"))
+            if (type.equals("by_organizer")) {
                 arg.putString(MainFragment.EXTRA_MESSAGE_ORGANIZER, organizer);
-            arg.putInt(EXTRA_MESSAGE_LIST_POSITION, ListViewPosition);
+            }
+            arg.putInt(EXTRA_MESSAGE_LIST_POSITION, listViewPosition);
             fragment.setArguments(arg);
             pagerAdapter.setFragmentLeft(fragment);
         } else {
@@ -196,16 +199,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
         if (id == R.id.action_about) {
             Intent intent = new Intent(this, SingleFragmentActivity.class);
             intent.putExtra(EXTRA_MESSAGE_OPTIONS, "action_about");
@@ -223,62 +223,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        menu.findItem(R.id.nav_all).setChecked(false);
-        menu.findItem(R.id.nav_brand).setChecked(false);
-        menu.findItem(R.id.nav_clothes).setChecked(false);
-        menu.findItem(R.id.nav_shoes).setChecked(false);
-        menu.findItem(R.id.nav_jewellery).setChecked(false);
-        menu.findItem(R.id.nav_electronics).setChecked(false);
-        menu.findItem(R.id.nav_others).setChecked(false);
-        menu.findItem(R.id.nav_cafe).setChecked(false);
-        menu.findItem(R.id.nav_sport).setChecked(false);
-        menu.findItem(R.id.nav_entertainment).setChecked(false);
-        menu.findItem(R.id.nav_subscription).setChecked(false);
-        menu.findItem(R.id.nav_selected).setChecked(false);
         type = "All";
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_all) {
-            menu.findItem(R.id.nav_all).setChecked(true);
-            type = "All";
-        } else if (id == R.id.nav_clothes) {
-            menu.findItem(R.id.nav_clothes).setChecked(true);
-            type = "clothes";
-
-        } else if (id == R.id.nav_brand) {
-            menu.findItem(R.id.nav_brand).setChecked(true);
-            type = "brands";
-        } else if (id == R.id.nav_shoes) {
-            menu.findItem(R.id.nav_shoes).setChecked(true);
-            type = "shoes";
-        } else if (id == R.id.nav_jewellery) {
-            menu.findItem(R.id.nav_jewellery).setChecked(true);
-            type = "jewellery";
-        } else if (id == R.id.nav_electronics) {
-            menu.findItem(R.id.nav_electronics).setChecked(true);
-            type = "electronics";
-        } else if (id == R.id.nav_others) {
-            menu.findItem(R.id.nav_others).setChecked(true);
-            type = "others";
-        } else if (id == R.id.nav_cafe) {
-            menu.findItem(R.id.nav_cafe).setChecked(true);
-            type = "cafe";
-        } else if (id == R.id.nav_sport) {
-            menu.findItem(R.id.nav_sport).setChecked(true);
-            type = "sport";
-        } else if (id == R.id.nav_entertainment) {
-            menu.findItem(R.id.nav_entertainment).setChecked(true);
-            type = "entertainment";
-        } else if (id == R.id.nav_selected) {
-            menu.findItem(R.id.nav_selected).setChecked(true);
-            type = "selected";
-        } else if (id == R.id.nav_subscription) {
-            menu.findItem(R.id.nav_subscription).setChecked(true);
-            type = "subscription";
+        switch (id) {
+            case R.id.nav_all:
+                selectNavigationItemChecked(R.id.nav_all);
+                type = "All";
+                break;
+            case R.id.nav_clothes:
+                selectNavigationItemChecked(R.id.nav_clothes);
+                type = "clothes";
+                break;
+            case R.id.nav_brand:
+                selectNavigationItemChecked(R.id.nav_brand);
+                type = "brands";
+                break;
+            case R.id.nav_shoes:
+                selectNavigationItemChecked(R.id.nav_shoes);
+                type = "shoes";
+                break;
+            case R.id.nav_jewellery:
+                selectNavigationItemChecked(R.id.nav_jewellery);
+                type = "jewellery";
+                break;
+            case R.id.nav_electronics:
+                selectNavigationItemChecked(R.id.nav_electronics);
+                type = "electronics";
+                break;
+            case R.id.nav_others:
+                selectNavigationItemChecked(R.id.nav_others);
+                type = "others";
+                break;
+            case R.id.nav_cafe:
+                selectNavigationItemChecked(R.id.nav_cafe);
+                type = "cafe";
+                break;
+            case R.id.nav_sport:
+                selectNavigationItemChecked(R.id.nav_sport);
+                type = "sport";
+                break;
+            case R.id.nav_entertainment:
+                selectNavigationItemChecked(R.id.nav_entertainment);
+                type = "entertainment";
+                break;
+            case R.id.nav_selected:
+                selectNavigationItemChecked(R.id.nav_selected);
+                type = "selected";
+                break;
+            case R.id.nav_subscription:
+                selectNavigationItemChecked(R.id.nav_subscription);
+                type = "subscription";
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         switch (type) {
@@ -303,7 +303,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
         private int PAGE_COUNT = 2;
 
         private Fragment fragmentLeft;
@@ -319,14 +318,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            Log.d("logf", "MyFragmentPagerAdapter created");
-
             if (extraID != -1) {
-                isEventOpen = true;
-                fragmentLeft = new SingleFragment();
-                Bundle arg = new Bundle();
-                arg.putInt(MainFragment.EXTRA_MESSAGE_ID, (int) extraID);
-                fragmentLeft.setArguments(arg);
+//                isEventOpen = true;
+//                fragmentLeft = new SingleFragment();
+//                Bundle arg = new Bundle();
+//                arg.putInt(MainFragment.EXTRA_MESSAGE_ID, (int) extraID);
+//                fragmentLeft.setArguments(arg);
             } else {
                 type = "All";
                 fragmentLeft = new MainFragment();
@@ -334,20 +331,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 arg.putString(EXTRA_MESSAGE_TYPE, type);
                 fragmentLeft.setArguments(arg);
             }
-
             fragmentRight = new BrandsFragment();
-
             fragmentManager = fm;
         }
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0)
+            if (position == 0) {
                 return fragmentLeft;
-            else if (position == 1)
+            }
+            if (position == 1) {
                 return fragmentRight;
-            else return null;
-
+            }
+            return null;
         }
 
         @Override
@@ -360,6 +356,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return POSITION_NONE;
         }
 
+    }
+
+    private void selectNavigationItemChecked(int id) {
+        menu.findItem(R.id.nav_all).setChecked(false);
+        menu.findItem(R.id.nav_brand).setChecked(false);
+        menu.findItem(R.id.nav_clothes).setChecked(false);
+        menu.findItem(R.id.nav_shoes).setChecked(false);
+        menu.findItem(R.id.nav_jewellery).setChecked(false);
+        menu.findItem(R.id.nav_electronics).setChecked(false);
+        menu.findItem(R.id.nav_others).setChecked(false);
+        menu.findItem(R.id.nav_cafe).setChecked(false);
+        menu.findItem(R.id.nav_sport).setChecked(false);
+        menu.findItem(R.id.nav_entertainment).setChecked(false);
+        menu.findItem(R.id.nav_subscription).setChecked(false);
+        menu.findItem(R.id.nav_selected).setChecked(false);
+
+        menu.findItem(id).setChecked(true);
     }
 
 }

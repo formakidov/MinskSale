@@ -1,10 +1,10 @@
 package com.ilavista.minsksale;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -33,8 +32,7 @@ public class MainFragment extends Fragment {
     public final static String EXTRA_MESSAGE_ORGANIZER = "com.ilavista.minsksale.ORGANIZER";
 
     private EventAdapter mAdapter;
-    private MainActivity.MyFragmentPagerAdapter pagerAdapter;
-    private Context context;
+    private MainActivity activity;
     private AbsListView mListView;
     private ArrayList<MyEvent> mEvents;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -45,58 +43,34 @@ public class MainFragment extends Fragment {
     private Handler mHandler;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.main_fragment_item, container, false);
         mEvents = new ArrayList<>();
         mAdapter = new EventAdapter(mEvents);
-        context = getActivity();
-        pagerAdapter = ((MainActivity) context).getPagerAdapter();
+        activity = (MainActivity) getActivity();
 
         mTextDownloading = view.findViewById(R.id.main_fragment_text);
 
-        // Set Swipe Refresh
         mSwipeRefreshLayout = view.findViewById(R.id.refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                DownloadThread thread = new DownloadThread(context, mHandler, ((MainActivity) context).getHandlerRight());
-                thread.start();
-            }
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(true);
+            DownloadThread thread = new DownloadThread(activity, mHandler, activity.getHandlerRight());
+            thread.start();
         });
 
         mListView = view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("logf", "Click on ListView item position " + position);
-                ((MainActivity) context).setIsEventOpen(true);
-                // getting list view scroll position
-                ((MainActivity) context).setListViewPosition(position);
+        mListView.setOnItemClickListener((parent, view1, position, id) -> {
+            Log.d("logf", "Click on ListView item position " + position);
+            activity.setIsEventOpen(true);
+            activity.setListViewPosition(position);
 
-                Fragment fragment = new SingleFragment();
-                Bundle arg = new Bundle();
-                arg.putInt(EXTRA_MESSAGE_ID, view.getId());
-                arg.putInt(EXTRA_MESSAGE_POSITION, view.getTop());
-                fragment.setArguments(arg);
-                setFragmentInPager(fragment);
-            }
-        });
-
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                mAdapter.setAnimate(scrollState == SCROLL_STATE_FLING || SCROLL_STATE_TOUCH_SCROLL == scrollState);
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-
+            Intent i = new Intent(getContext(), EventDetailsActivity.class);
+            i.putExtra(EXTRA_MESSAGE_ID, view1.getId());
+            i.putExtra(EXTRA_MESSAGE_POSITION, view1.getTop());
+            startActivity(i);
         });
 
         mHandler = new Handler() {
@@ -106,7 +80,7 @@ public class MainFragment extends Fragment {
                     case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
                         Log.d("logf", "MainFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
                         mSwipeRefreshLayout.setRefreshing(false);
-                        LoadDataFromDB(context, mEvents, type);
+                        LoadDataFromDB(activity, mEvents, type);
                         animateListView(mListView);
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                         break;
@@ -115,13 +89,13 @@ public class MainFragment extends Fragment {
                         Log.d("logf", "MainFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
                         MakeSnackBar("Отсутсвует подключение к Интернету");
-                        LoadDataFromDB(context, mEvents, type);
+                        LoadDataFromDB(activity, mEvents, type);
                         break;
                 }
                 mTextDownloading.setVisibility(View.GONE);
             }
         };
-        ((MainActivity) context).setHandlerLeft(mHandler);
+        activity.setHandlerLeft(mHandler);
 
         if (getArguments() == null) {
             type = "All";
@@ -133,7 +107,7 @@ public class MainFragment extends Fragment {
         }
 
         mTextDownloading.setVisibility(View.GONE);
-        LoadDataFromDB(context, mEvents, type);
+        LoadDataFromDB(activity, mEvents, type);
 
         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
 
@@ -149,11 +123,6 @@ public class MainFragment extends Fragment {
         TextView snackTextView = view.findViewById(android.support.design.R.id.snackbar_text);
         snackTextView.setTextColor(Color.parseColor("#6c440b"));
         snack.show();
-    }
-
-    //------------------------------------------------------------------------------------
-    private void setFragmentInPager(Fragment newFragment) {
-        pagerAdapter.setFragmentLeft(newFragment);
     }
 
     private class EventAdapter extends ArrayAdapter<MyEvent> {
@@ -177,8 +146,9 @@ public class MainFragment extends Fragment {
         public View getView(int position, View convertView, final ViewGroup parent) {
             MyEvent event = getItem(position);
 
-            if (convertView == null)
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_main_list_item, parent, false);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
+            }
 
             if (getCount() == 0) {
                 Log.d("logf", "Array of events is empty");
@@ -186,12 +156,12 @@ public class MainFragment extends Fragment {
             }
             final ImageView mImage = convertView.findViewById(R.id.main_list_item_image);
 
-            Bitmap img = BitmapFactory.decodeFile(context.getFilesDir() + event.getImageName());
+            Bitmap img = BitmapFactory.decodeFile(activity.getFilesDir() + event.getImageName());
             mImage.setImageBitmap(img);
             convertView.setId((int) event.getID());
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                if (animate) animatePostHc(position, convertView);
+            if (animate) {
+                animatePostHc(position, convertView);
             }
             prevPosition = position;
             return convertView;

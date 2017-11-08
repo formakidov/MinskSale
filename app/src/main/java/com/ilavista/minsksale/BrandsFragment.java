@@ -40,49 +40,39 @@ public class BrandsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_brands_item_list, container, false);
         context = getActivity();
 
-        // Set Swipe Refresh
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_brands_refresh);
+        mSwipeRefreshLayout = view.findViewById(R.id.fragment_brands_refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                if (((MainActivity) context).isEventOpen()) {
-                    DownloadThread thread = new DownloadThread(context, null, mHandler);
-                    thread.start();
-                } else {
-                    DownloadThread thread = new DownloadThread(context, ((MainActivity) context).getHandlerLeft(), mHandler);
-                    thread.start();
-                }
-
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(true);
+            if (((MainActivity) context).isEventOpen()) {
+                DownloadThread thread = new DownloadThread(context, null, mHandler);
+                thread.start();
+            } else {
+                DownloadThread thread = new DownloadThread(context, ((MainActivity) context).getHandlerLeft(), mHandler);
+                thread.start();
             }
+
         });
 
-        // Set the adapter
-        mListView = (AbsListView) view.findViewById(R.id.fragment_brands_list);
+        mListView = view.findViewById(R.id.fragment_brands_list);
         mListView.setAdapter(mAdapter);
 
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView textView = (TextView) view.findViewById(R.id.fragment_brands_item_text);
+        mListView.setOnItemClickListener((parent, view1, position, id) -> {
+            TextView textView = view1.findViewById(R.id.fragment_brands_item_text);
 
-                Fragment fragment = new MainFragment();
-                Bundle arg = new Bundle();
-                arg.putString(MainFragment.EXTRA_MESSAGE_ORGANIZER, textView.getText().toString());
-                fragment.setArguments(arg);
-                MainActivity.MyFragmentPagerAdapter pagerAdapter = ((MainActivity) context).getPagerAdapter();
-                pagerAdapter.setFragmentLeft(fragment);
-                ((MainActivity) context).setPage(0);
-                ((MainActivity) context).setType("by_organizer");
-                ((MainActivity) context).setOrganizer(textView.getText().toString());
-            }
+            Fragment fragment = new MainFragment();
+            Bundle arg = new Bundle();
+            arg.putString(MainFragment.EXTRA_MESSAGE_ORGANIZER, textView.getText().toString());
+            fragment.setArguments(arg);
+            MainActivity.MyFragmentPagerAdapter pagerAdapter = ((MainActivity) context).getPagerAdapter();
+            pagerAdapter.setFragmentLeft(fragment);
+            ((MainActivity) context).setPage(0);
+            ((MainActivity) context).setType("by_organizer");
+            ((MainActivity) context).setOrganizer(textView.getText().toString());
         });
 
         mHandler = new Handler() {
@@ -96,7 +86,6 @@ public class BrandsFragment extends Fragment {
                         ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
                         animateListView(mListView);
                         break;
-
                     case DownloadThread.NO_CONNECTION:
                         Log.d("logf", "BrandsFragment Handler message: NO_CONNECTION");
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -140,7 +129,7 @@ public class BrandsFragment extends Fragment {
         Snackbar snack = Snackbar.make(mSwipeRefreshLayout, text, Snackbar.LENGTH_SHORT);
         View view = snack.getView();
         view.setBackgroundResource(R.color.colorPrimary);
-        TextView snackTextView = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackTextView = view.findViewById(android.support.design.R.id.snackbar_text);
         snackTextView.setTextColor(Color.parseColor("#6c440b"));
         snack.show();
     }
@@ -174,8 +163,8 @@ public class BrandsFragment extends Fragment {
             if (convertView == null)
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_brands_list_item, parent, false);
 
-            TextView textViewName = (TextView) convertView.findViewById(R.id.fragment_brands_item_text);
-            TextView textViewCount = (TextView) convertView.findViewById(R.id.fragment_brands_item_count_text);
+            TextView textViewName = convertView.findViewById(R.id.fragment_brands_item_text);
+            TextView textViewCount = convertView.findViewById(R.id.fragment_brands_item_count_text);
 
             textViewName.setText(organizer.getName());
             textViewCount.setText("событий: " + organizer.getEventsCount());
