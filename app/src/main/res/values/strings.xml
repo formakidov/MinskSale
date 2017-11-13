@@ -44,10 +44,8 @@
         за достоверность информации, поэтому рекомендуем уточнять детали акции у организаторов. </string>
     <string name="main_fragment_text">загрузка данных…</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="subscriptions_text">Подписки</string>
-    <string name="subscriptions_description">Вы будете получать уведомление, когда появится событие от этих отганизаторов</string>
+    <string name="subscriptions_description">Вы будете получать уведомление, когда появится событие от этих организаторов</string>
     <string name="add_to_subscriptions">Подписаться на обновления от </string>
     <string name="fragment_brand_text">По названию брэнда</string>
     <string name="subscribe_on_organizer">Подписаться на обновления от %s</string>

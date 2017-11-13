@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.ViewAnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -153,15 +154,35 @@ public class EventDetailsActivity extends BaseActivity {
     }
 
     private String getFinishDateString() {
-        String str = "";
+        // TODO: 11/13/17 refactor
+        String str;
+        String start_date = event.getStartDate();
         String finish_date = event.getFinishDate();
+        String start_time = "";
+        if (event.getStartTime().length() > 5) {
+            start_time = event.getStartTime().substring(0, 5);
+        }
         String finish_time = "";
-        if (event.getFinishTime().length() > 5) {
+        if (event.getStartTime().length() > 5) {
             finish_time = event.getFinishTime().substring(0, 5);
         }
 
-        if (finish_time.equals("00:00")) finish_time = "";
-        if (!finish_date.isEmpty()) {
+        if (start_time.equals("00:00")) {
+            start_time = "";
+        }
+        if (finish_time.equals("00:00")) {
+            finish_time = "";
+        }
+        if (TextUtils.isEmpty(start_date) && (TextUtils.isEmpty(finish_date))) {
+            str = "";
+        } else if (start_date.equals(finish_date) && (TextUtils.isEmpty(event.getFinishTime()))) {
+            str = "Время проведения: " + formatFinishDate(start_date) + " с " + start_time;
+        } else if (start_date.equals(finish_date)) {
+            str = "Время проведения: " + formatFinishDate(start_date) + " с " + start_time;
+            if (!TextUtils.isEmpty(finish_time)) {
+                str += " до " + finish_time;
+            }
+        } else {
             str = "Окончание: " + formatFinishDate(finish_date) + "  " + finish_time;
         }
         return str;

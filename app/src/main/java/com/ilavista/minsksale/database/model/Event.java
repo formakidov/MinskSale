@@ -21,6 +21,10 @@ public class Event extends RealmObject {
     public String name;
     @SerializedName("Organizer")
     public String organizer;
+    @SerializedName("StartDate")
+    public String startDate;
+    @SerializedName("StartTime")
+    public String startTime;
     @SerializedName("FinishDate")
     public String finishDate;
     @SerializedName("FinishTime")
@@ -72,6 +76,22 @@ public class Event extends RealmObject {
 
     public void setOrganizer(String organizer) {
         this.organizer = organizer;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getFinishDate() {
