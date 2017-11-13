@@ -18,12 +18,12 @@ public class DBManager {
 
     public static void insertFavorite(final Event event) {
         FavoriteEvent favoriteEvent = new FavoriteEvent();
-        favoriteEvent.setId(event.getID());
+        favoriteEvent.setId(event.getId());
         realm().insertOrUpdate(favoriteEvent);
     }
 
     public static void removeFavorite(final Event event) {
-        FavoriteEvent ev = realm().where(FavoriteEvent.class).equalTo(FavoriteEvent.FIELD_ID, event.getID()).findFirst();
+        FavoriteEvent ev = realm().where(FavoriteEvent.class).equalTo(FavoriteEvent.FIELD_ID, event.getId()).findFirst();
         if (ev != null) {
             ev.deleteFromRealm();
         }
@@ -37,24 +37,22 @@ public class DBManager {
         return realm().where(FavoriteEvent.class).equalTo(FavoriteEvent.FIELD_ID, id).findFirst() != null;
     }
 
-    public static void loadEvents(final List<Event> events, String type) {
-        loadEvents(events, type, null);
+    public static List<Event> loadEvents(String type) {
+        return loadEvents(type, null);
     }
 
-    public static void loadEvents(final List<Event> events, String type, String organizer) {
+    public static List<Event> loadEvents(String type, String organizer) {
         RealmQuery<Event> query = realm().where(Event.class);
-        events.clear();
         if (organizer != null) {
             query = query.equalTo(Event.FIELD_ORGANIZER, organizer);
         } else if (!type.equals("All") && !type.equals("first") || !type.equals("selected")) {
             query = query.equalTo(Event.FIELD_TYPE, type);
         }
-        events.addAll(query.findAllSorted(Event.FIELD_ID, Sort.DESCENDING));
+        return query.findAllSorted(Event.FIELD_ID, Sort.DESCENDING);
     }
 
-    public static void loadFavorite(final List<Event> events, String type, String organizer) {
+    public static List<Event> loadFavorite(String type, String organizer) {
         RealmQuery<FavoriteEvent> query = realm().where(FavoriteEvent.class);
-        events.clear();
         if (organizer != null) {
             query = query.equalTo(Event.FIELD_ORGANIZER, organizer);
         } else if (!type.equals("All") && !type.equals("first") || !type.equals("selected")) {
@@ -65,9 +63,9 @@ public class DBManager {
         for (FavoriteEvent favoriteEvent : favoriteEvents) {
             eventsIds.add(favoriteEvent.getId());
         }
-        events.addAll(realm().where(Event.class)
+        return realm().where(Event.class)
                 .in(Event.FIELD_ID, eventsIds.toArray(new Long[eventsIds.size()]))
-                .findAllSorted(FavoriteEvent.FIELD_ID, Sort.DESCENDING));
+                .findAllSorted(FavoriteEvent.FIELD_ID, Sort.DESCENDING);
     }
 
     public static Realm realm() {

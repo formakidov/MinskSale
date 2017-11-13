@@ -5,10 +5,10 @@
 
     <string name="menu_drawer_all">Все события</string>
     <string name="menu_drawer_brand">По брэндам</string>
-    <string name="menu_drawer_sale_clothes">Одежда</string>
-    <string name="menu_drawer_sale_shoes">Обувь</string>
-    <string name="menu_drawer_sale_jewellery">Бижутерия</string>
+    <string name="menu_drawer_sale_clothes">Одежда и обувь</string>
     <string name="menu_drawer_sale_electronics">Электроника</string>
+    <string name="menu_drawer_sale_auto">Авто</string>
+    <string name="menu_drawer_sale_jewellery">Украшения</string>
     <string name="menu_drawer_sale_others">Другое</string>
     <string name="menu_drawer_selected">Закладки</string>
     <string name="menu_drawer_settings">Подписки</string>

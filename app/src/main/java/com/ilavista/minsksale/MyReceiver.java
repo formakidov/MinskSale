@@ -59,7 +59,7 @@ public class MyReceiver extends BroadcastReceiver {
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
                 Log.d("logf(MyReceiver)", "We've got INTERNET!");
-                LoadDataFromDB(events);
+                LoadDataFromDB();
                 getEventsNames(events, names);
 
                 DownloadDataTask downloadTask = new DownloadDataTask(context, events);
@@ -87,7 +87,7 @@ public class MyReceiver extends BroadcastReceiver {
 
         @Override
         protected String doInBackground(String... sUrl) {
-            String URL = ProgramConfigs.getInstance(context).getDataURL();
+            String URL = Constants.DATA_URL;
             Log.d("logf(MyReceiver)", "Trying to download data from: " + URL);
             InputStream input = null;
             HttpURLConnection connection = null;
@@ -143,7 +143,7 @@ public class MyReceiver extends BroadcastReceiver {
                     for (String str : listOfSubscriptions) {
                         if (str.equals(event.getOrganizer())) {
                             Intent intent = new Intent(context, MainActivity.class);
-                            intent.putExtra(RECEIVER_MESSAGE_ID, event.getID());
+                            intent.putExtra(RECEIVER_MESSAGE_ID, event.getId());
                             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 notification = new Notification.Builder(context)
@@ -187,8 +187,8 @@ public class MyReceiver extends BroadcastReceiver {
         DBManager.insert(events);
     }
 
-    void LoadDataFromDB(List<Event> events) {
-        DBManager.loadEvents(events, "All");
+    void LoadDataFromDB() {
+        events = DBManager.loadEvents("All");
     }
 
     void getEventsNames(List<Event> events, List<String> names) {

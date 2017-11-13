@@ -18,6 +18,8 @@ import com.ilavista.minsksale.SubscriptionManager;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 public class SubscriptionFragment extends Fragment {
 
     private SubscriptionManager manager;
@@ -25,9 +27,19 @@ public class SubscriptionFragment extends Fragment {
     private Context context;
     private LinearLayout layout;
 
+    public static SubscriptionFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        SubscriptionFragment fragment = new SubscriptionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_subscription, container, false);
+        ButterKnife.bind(this, v);
         layout = v.findViewById(R.id.subscriptionsLayout);
         return v;
     }

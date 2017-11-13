@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.MainFragment">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
@@ -12,19 +11,20 @@
         android:layout_height="match_parent"
         tools:context="badcompany.by.minskshopping.MainFragment">
 
-        <GridView
+        <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:numColumns="2"/>
+            android:layout_height="match_parent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"/>
+        android:id="@+id/loadingTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/main_fragment_text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorPrimaryLightGrey"/>
 
 </FrameLayout>
-

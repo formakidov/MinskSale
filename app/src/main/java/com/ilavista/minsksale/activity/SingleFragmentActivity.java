@@ -12,7 +12,7 @@ import com.ilavista.minsksale.activity.MainActivity;
 import com.ilavista.minsksale.fragment.PostAdFragment;
 import com.ilavista.minsksale.R;
 
-public class SingleFragmentActivity extends AppCompatActivity {
+public class SingleFragmentActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,13 +3,15 @@ package com.ilavista.minsksale;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
-import com.ilavista.minsksale.database.RealmUtils;
+import com.ilavista.minsksale.utils.RealmUtils;
+import com.ilavista.minsksale.network.NetModule;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class App extends Application {
     private static final String RELEASE_BUILD_TYPE = "release";
+    private static AppComponent appComponent;
 
     @Override
     public void onCreate() {
@@ -22,5 +24,28 @@ public class App extends Application {
         }
 
         RealmUtils.init(this);
+//        instantiateFakeMap();
+
+        appComponent = DaggerAppComponent.builder()
+                .netModule(new NetModule(this))
+                .build();
     }
+
+    public static AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    // google play services should be instantiate here for better performance of future instantiation
+//    private void instantiateFakeMap() {
+//        new Thread(() -> {
+//            try {
+//                MapsInitializer.initialize(this);
+//                MapView mv = new MapView(this);
+//                mv.onCreate(null);
+//                mv.onPause();
+//                mv.onDestroy();
+//            } catch (Exception ignored) {
+//            }
+//        }).start();
+//    }
 }

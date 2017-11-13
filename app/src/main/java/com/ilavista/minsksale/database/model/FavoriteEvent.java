@@ -7,7 +7,6 @@ import io.realm.annotations.Required;
 public class FavoriteEvent extends RealmObject {
     public static final String FIELD_ID = "id";
 
-    @Required
     @PrimaryKey
     private long id;
 

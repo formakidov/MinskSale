@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ilavista.minsksale.database.DBManager;
@@ -28,42 +26,51 @@ import com.ilavista.minsksale.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 public class BrandsFragment extends Fragment {
 
     private Context context;
     private BrandsAdapter mAdapter;
     private AbsListView mListView;
-    private ArrayList<Event> mEvents;
-    private ArrayList<Organizer> mOrganizers;
+    private List<Event> events;
+    private List<Organizer> organizers;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private Handler mHandler;
+
+    public static BrandsFragment newInstance() {
+        Bundle args = new Bundle();
+
+        BrandsFragment fragment = new BrandsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEvents = new ArrayList<>();
-        mOrganizers = new ArrayList<>();
-        mAdapter = new BrandsAdapter(mOrganizers);
+        events = new ArrayList<>();
+        organizers = new ArrayList<>();
+        mAdapter = new BrandsAdapter(organizers);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_brands_item_list, container, false);
+        ButterKnife.bind(this, view);
         context = getActivity();
 
-        // Set Swipe Refresh
-        mSwipeRefreshLayout = view.findViewById(R.id.fragment_brands_refresh);
         mSwipeRefreshLayout = view.findViewById(R.id.fragment_brands_refresh);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             mSwipeRefreshLayout.setRefreshing(true);
-            if (((MainActivity) context).isEventOpen()) {
-                DownloadThread thread = new DownloadThread(context, null, mHandler);
-                thread.start();
-            } else {
+//            if (((MainActivity) context).isEventOpen()) {
+//                DownloadThread thread = new DownloadThread(context, null, mHandler);
+//                thread.start();
+//            } else {
                 DownloadThread thread = new DownloadThread(context, ((MainActivity) context).getHandlerLeft(), mHandler);
                 thread.start();
-            }
+//            }
 
         });
 
@@ -73,45 +80,46 @@ public class BrandsFragment extends Fragment {
         mListView.setOnItemClickListener((parent, view1, position, id) -> {
             TextView textView = view1.findViewById(R.id.fragment_brands_item_text);
 
-            Fragment fragment = new MainFragment();
+            Fragment fragment = new EventsListFragment();
             Bundle arg = new Bundle();
-            arg.putString(MainFragment.EXTRA_MESSAGE_ORGANIZER, textView.getText().toString());
+            arg.putString(EventsListFragment.EXTRA_MESSAGE_ORGANIZER, textView.getText().toString());
             fragment.setArguments(arg);
-            MainActivity.MyFragmentPagerAdapter pagerAdapter = ((MainActivity) context).getPagerAdapter();
-            pagerAdapter.setFragmentLeft(fragment);
-            ((MainActivity) context).setPage(0);
-            ((MainActivity) context).setType("by_organizer");
-            ((MainActivity) context).setOrganizer(textView.getText().toString());
+            // TODO: 11/9/17
+//            MainActivity.MyFragmentPagerAdapter pagerAdapter = ((MainActivity) context).getPagerAdapter();
+//            pagerAdapter.setFragmentLeft(fragment);
+//            ((MainActivity) context).setPage(0);
+//            ((MainActivity) context).setType("by_organizer");
+//            ((MainActivity) context).setOrganizer(textView.getText().toString());
         });
 
-        mHandler = new Handler() {
-
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
-                        Log.d("logf", "BrandsFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        loadData(mEvents, mOrganizers);
-                        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                        animateListView(mListView);
-                        break;
-                    case DownloadThread.NO_CONNECTION:
-                        Log.d("logf", "BrandsFragment Handler message: NO_CONNECTION");
-                        mSwipeRefreshLayout.setRefreshing(false);
-                        showSnackBar("Отсутсвует подключение к Интернету");
-                        loadData(mEvents, mOrganizers);
-                        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
-                        break;
-                }
-            }
-        };
+//        mHandler = new Handler() {
+//
+//            public void handleMessage(Message msg) {
+//                switch (msg.what) {
+//                    case DownloadThread.FINISH_DOWNLOADING_SUCCESSFULLY:
+//                        Log.d("logf", "BrandsFragment Handler message: FINISH_DOWNLOADING_SUCCESSFULLY");
+//                        mSwipeRefreshLayout.setRefreshing(false);
+//                        loadData();
+//                        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+//                        animateListView(mListView);
+//                        break;
+//                    case DownloadThread.NO_CONNECTION:
+//                        Log.d("logf", "BrandsFragment Handler message: NO_CONNECTION");
+//                        mSwipeRefreshLayout.setRefreshing(false);
+//                        showSnackBar("Отсутсвует подключение к Интернету");
+//                        loadData();
+//                        ((BaseAdapter) mListView.getAdapter()).notifyDataSetChanged();
+//                        break;
+//                }
+//            }
+//        };
         ((MainActivity) context).setHandlerRight(mHandler);
 
         if (ProgramConfigs.getInstance(context).isFirstStart()) {
             DownloadThread thread = new DownloadThread(context, ((MainActivity) context).getHandlerLeft(), mHandler);
             thread.start();
         } else {
-            loadData(mEvents, mOrganizers);
+            loadData();
         }
 
         Log.d("logf", "Brands fragment created View");
@@ -143,8 +151,8 @@ public class BrandsFragment extends Fragment {
         snack.show();
     }
 
-    private void loadData(List<Event> events, List<Organizer> organizers) {
-        DBManager.loadEvents(events, "All");
+    private void loadData() {
+        events = DBManager.loadEvents("All");
         getOrganizersFromEvent(events, organizers);
     }
 
@@ -159,7 +167,7 @@ public class BrandsFragment extends Fragment {
 
         int prevPosition;
 
-        public BrandsAdapter(ArrayList<Organizer> organizers) {
+        public BrandsAdapter(List<Organizer> organizers) {
             super(getActivity(), 0, organizers);
             prevPosition = 0;
         }

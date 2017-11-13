@@ -30,14 +30,10 @@ public class SubscriptionManager {
         String string;
         List<String> subscriptions = new ArrayList<>();
         DBHelper dbHelper = new DBHelper(context);
-        // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor c;
         c = db.query(db_table_name, null, null, null, null, null, null);
-        // ставим позицию курсора на первую строку выборки
-        // если в выборке нет строк, вернется false
         if (c.moveToFirst()) {
-            // определяем номера столбцов по имени в выборке
             int colOrganizer = c.getColumnIndex("Organizer");
 
             do {
@@ -54,9 +50,7 @@ public class SubscriptionManager {
 
     public void saveAll(List<String> subscriptions) {
         DBHelper dbHelper = new DBHelper(context);
-        // создаем объект для данных
         ContentValues singleValue = new ContentValues();
-        // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // удаляем все записи
         db.delete(db_table_name, null, null);

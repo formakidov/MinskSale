@@ -1,137 +1,125 @@
 package com.ilavista.minsksale.database.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
 
 public class Event extends RealmObject {
-    public static final String FIELD_ID = "ID";
+    public static final String FIELD_ID = "id";
     public static final String FIELD_ORGANIZER = "Organizer";
     public static final String FIELD_TYPE = "Type";
 
-    @Required
+    @SerializedName("ID")
     @PrimaryKey
-    private long ID;
-    private String Type = "";
-    private int Rate;
-    private String Name = "";
-    private String Organizer = "";
-    private String StartDate = "";
-    private String StartTime = "";
-    private String FinishDate = "";
-    private String FinishTime = "";
-    private String ImageURL = "";
-    private String ImageName = "";
-    private String Location = "";
-    private String Description = "";
+    public long id;
+    @SerializedName("Type")
+    public String type;
+    @SerializedName("Rate")
+    public String rate;
+    @SerializedName("Name")
+    public String name;
+    @SerializedName("Organizer")
+    public String organizer;
+    @SerializedName("FinishDate")
+    public String finishDate;
+    @SerializedName("FinishTime")
+    public String finishTime;
+    @SerializedName("ImageURL")
+    public String imageURL;
+    @SerializedName("ImageName")
+    public String imageName;
+    @SerializedName("Location")
+    public String location;
+    @SerializedName("Description")
+    public String description;
 
-    public int getRate() {
-        return Rate;
+    public long getId() {
+        return id;
     }
 
-    public void setRate(int rate) {
-        Rate = rate;
-    }
-
-    public long getID() {
-        return ID;
-    }
-
-    public void setID(long ID) {
-        this.ID = ID;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 
     public String getOrganizer() {
-        return Organizer;
+        return organizer;
     }
 
     public void setOrganizer(String organizer) {
-        this.Organizer = organizer;
-    }
-
-    public String getStartDate() {
-        return StartDate;
-    }
-
-    public void setStartDate(String startDate) {
-        StartDate = startDate;
-    }
-
-    public String getStartTime() {
-        return StartTime;
-    }
-
-    public void setStartTime(String startTime) {
-        StartTime = startTime;
+        this.organizer = organizer;
     }
 
     public String getFinishDate() {
-        return FinishDate;
+        return finishDate;
     }
 
     public void setFinishDate(String finishDate) {
-        FinishDate = finishDate;
+        this.finishDate = finishDate;
     }
 
     public String getFinishTime() {
-        return FinishTime;
+        return finishTime;
     }
 
     public void setFinishTime(String finishTime) {
-        FinishTime = finishTime;
+        this.finishTime = finishTime;
     }
 
     public String getImageURL() {
-        return ImageURL;
+        return imageURL;
     }
 
     public void setImageURL(String imageURL) {
-        this.ImageURL = imageURL;
+        this.imageURL = imageURL;
     }
 
     public String getImageName() {
-        return ImageName;
+        return imageName;
     }
 
     public void setImageName(String imageName) {
-        this.ImageName = imageName;
+        this.imageName = imageName;
     }
 
     public String getLocation() {
-        return Location;
+        return location;
     }
 
     public void setLocation(String location) {
-        this.Location = location;
+        this.location = location;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        this.Description = description;
-    }
-
-    @Override
-    public String toString() {
-        return Name;
+        this.description = description;
     }
 }
 

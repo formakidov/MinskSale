@@ -9,7 +9,6 @@ public class ProgramConfigs {
     private final static String PREFERENCES_GET_PERIOD = "com.ilavista.minsksale.PREFERENCES_PERIOD";
     private final static String PREFERENCES_GET_INTERNET_RECEIVER = "com.ilavista.minsksale.PREFERENCES_INTERNET_RECEIVER";
 
-    private String dataURL;
     private int notificationPeriod;
     private Boolean isInternetReceiverEnabled;
     private Boolean isFirstStart;
@@ -25,7 +24,6 @@ public class ProgramConfigs {
 
     private ProgramConfigs(Context context) {
         SharedPreferences sp = context.getSharedPreferences("Preferences", Context.MODE_PRIVATE);
-        dataURL = "http://minsksale.by/getdata.php";
         notificationPeriod = sp.getInt(PREFERENCES_GET_PERIOD,12*60*60*1000);
         isInternetReceiverEnabled = sp.getBoolean(PREFERENCES_GET_INTERNET_RECEIVER, false);
         isFirstStart = true;
@@ -51,16 +49,8 @@ public class ProgramConfigs {
 
     }
 
-    public String getDataURL() {
-        return dataURL;
-    }
-
     public int getNotificationPeriod() {
         return notificationPeriod;
-    }
-
-    public void setDataURL(String dataURL) {
-        this.dataURL = dataURL;
     }
 
     public Boolean isInternetReceiverEnabled() {

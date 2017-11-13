@@ -9,6 +9,8 @@ apply plugin: 'io.fabric'
 
 buildscript {
     repositories {
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
         maven { url 'https://maven.fabric.io/public' }
     }
 
@@ -49,17 +51,40 @@ android {
 
 dependencies {
     final supportLibraryVersion = '26.1.0'
+    final retrofitVersion = '2.3.0'
+    final daggerVersion = '2.11'
+    final glideVersion = '4.3.1'
+    final butterKnifeVersion = '8.8.1'
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:support-v4:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
-    compile 'com.google.code.gson:gson:2.8.0'
+
+    compile 'com.google.code.gson:gson:2.8.1' //remove
     compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
     compile 'io.fabric.sdk.android:fabric:1.4.1@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
+
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    compile "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+
 }

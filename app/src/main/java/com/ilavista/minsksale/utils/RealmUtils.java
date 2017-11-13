@@ -1,4 +1,4 @@
-package com.ilavista.minsksale.database;
+package com.ilavista.minsksale.utils;
 
 import android.content.Context;
 

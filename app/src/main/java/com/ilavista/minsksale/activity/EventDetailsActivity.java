@@ -14,8 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ilavista.minsksale.App;
+import com.ilavista.minsksale.network.ServerService;
 import com.ilavista.minsksale.utils.InnerAnimatorListener;
-import com.ilavista.minsksale.fragment.MainFragment;
+import com.ilavista.minsksale.fragment.EventsListFragment;
 import com.ilavista.minsksale.R;
 import com.ilavista.minsksale.SubscriptionManager;
 import com.ilavista.minsksale.database.DBManager;
@@ -23,10 +25,12 @@ import com.ilavista.minsksale.database.model.Event;
 
 import java.text.DateFormatSymbols;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventDetailsActivity extends AppCompatActivity {
+public class EventDetailsActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nameTv)
@@ -64,10 +68,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         Intent intent = getIntent();
-        int ID = intent.getIntExtra(MainFragment.EXTRA_MESSAGE_ID, -1);
-        int POSITION = intent.getIntExtra(MainFragment.EXTRA_MESSAGE_POSITION, 0);
+        int ID = intent.getIntExtra(EventsListFragment.EXTRA_MESSAGE_ID, -1);
+        int POSITION = intent.getIntExtra(EventsListFragment.EXTRA_MESSAGE_POSITION, 0);
 
-        event = LoadEventFromDB(ID);
+        event = loadEvent(ID);
 
         // TODO: 11/8/17
         final SubscriptionManager manager = new SubscriptionManager(this);
@@ -142,7 +146,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         rootLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(rootLayout)).start();
     }
 
-    public Event LoadEventFromDB(int ID) {
+    public Event loadEvent(int ID) {
         Event event = DBManager.getEvent(ID);
         isFavorite = DBManager.isFavorite(ID);
         return event;

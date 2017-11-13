@@ -104,10 +104,6 @@ public class DownloadThread extends Thread {
         DBManager.insert(events);
     }
 
-    private void LoadDataFromDB(List<Event> events) {
-        DBManager.loadEvents(events, "All");
-    }
-
     private boolean isEventInDB(Event event) {
         String name = event.getName();
         for (String str : names) {
@@ -118,8 +114,7 @@ public class DownloadThread extends Thread {
     }
 
     private List<String> getListOfImagesOnDevice() {
-        List<Event> eventsOnDevice = new ArrayList<>();
-        LoadDataFromDB(eventsOnDevice);
+        List<Event> eventsOnDevice = DBManager.loadEvents("All");
         List<String> imageFilesOnDevice = new ArrayList<>();
         for (Event event : eventsOnDevice) {
             imageFilesOnDevice.add(event.getImageName());
@@ -179,8 +174,7 @@ public class DownloadThread extends Thread {
     private void checkForSubscriptionEvents() {
         names = new ArrayList<>();
         Boolean isThereIsNewEvents = false;
-        List<Event> eventsOld = new ArrayList<>();
-        LoadDataFromDB(eventsOld);
+        List<Event> eventsOld = DBManager.loadEvents("All");
 
         for (Event event : eventsOld)
             names.add(event.getName());
@@ -195,7 +189,7 @@ public class DownloadThread extends Thread {
                 for (String str : listOfSubscriptions) {
                     if (str.equals(event.getOrganizer())) {
                         Intent intent = new Intent(context, MainActivity.class);
-                        intent.putExtra(MyReceiver.RECEIVER_MESSAGE_ID, event.getID());
+                        intent.putExtra(MyReceiver.RECEIVER_MESSAGE_ID, event.getId());
                         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                             notification = new Notification.Builder(context)

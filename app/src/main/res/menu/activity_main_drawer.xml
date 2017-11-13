@@ -20,17 +20,17 @@
                         android:icon="@drawable/img_clothes"
                         android:title="@string/menu_drawer_sale_clothes"/>
                     <item
-                        android:id="@+id/nav_shoes"
-                        android:icon="@drawable/img_shoes"
-                        android:title="@string/menu_drawer_sale_shoes"/>
-                    <item
-                        android:id="@+id/nav_jewellery"
-                        android:icon="@drawable/img_jewellery"
-                        android:title="@string/menu_drawer_sale_jewellery"/>
+                        android:id="@+id/nav_auto"
+                        android:icon="@drawable/img_auto"
+                        android:title="@string/menu_drawer_sale_auto"/>
                     <item
                         android:id="@+id/nav_electronics"
                         android:icon="@drawable/img_electronics"
                         android:title="@string/menu_drawer_sale_electronics"/>
+                    <item
+                        android:id="@+id/nav_jewellery"
+                        android:icon="@drawable/img_jewellery"
+                        android:title="@string/menu_drawer_sale_jewellery"/>
 
                     <item
                         android:id="@+id/nav_others"
