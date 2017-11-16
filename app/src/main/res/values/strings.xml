@@ -5,6 +5,7 @@
 
     <string name="menu_drawer_all">Все события</string>
     <string name="menu_drawer_brand">По брэндам</string>
+    <string name="menu_drawer_sale_beauty">Красота и здоровье</string>
     <string name="menu_drawer_sale_clothes">Одежда и обувь</string>
     <string name="menu_drawer_sale_electronics">Электроника</string>
     <string name="menu_drawer_sale_auto">Авто</string>
@@ -25,8 +26,7 @@
     <string name="action_about">О программе</string>
     <string name="action_post_adv">Разместить объявление</string>
 
-    <string name="main_fragment_item_default_text">Item default text</string>
-    <string name="main_fragment_item_img_description">Image description</string>
+    <string name="main_fragment_item_img_description">Image</string>
 
     <string name="title_activity_single_fragment">Информация</string>
 
@@ -49,4 +49,5 @@
     <string name="add_to_subscriptions">Подписаться на обновления от </string>
     <string name="fragment_brand_text">По названию брэнда</string>
     <string name="subscribe_on_organizer">Подписаться на обновления от %s</string>
+    <string name="subscriptions_events_notification_channel_name">Подписки</string>
 </resources>

@@ -18,19 +18,21 @@ import com.ilavista.minsksale.SubscriptionManager;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SubscriptionFragment extends Fragment {
 
-    private SubscriptionManager manager;
-    private List<String> subscriptions;
-    private Context context;
-    private LinearLayout layout;
+    @BindView(R.id.subscriptionsLayout)
+    LinearLayout layout;
+
+    private SubscriptionManager subscriptionManager;
+    private List<String> orgNames;
 
     public static SubscriptionFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         SubscriptionFragment fragment = new SubscriptionFragment();
         fragment.setArguments(args);
         return fragment;
@@ -40,32 +42,24 @@ public class SubscriptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_subscription, container, false);
         ButterKnife.bind(this, v);
-        layout = v.findViewById(R.id.subscriptionsLayout);
+        subscriptionManager = SubscriptionManager.getInstance(getActivity());
+        orgNames = subscriptionManager.getAllOrganizersNames();
+        drawSubs();
         return v;
     }
 
-    @Override
-    public void onStop() {
-        manager.saveAll(subscriptions);
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void drawSubs() {
+        Context context = getContext();
 
         if (layout.getChildCount() > 0) {
             layout.removeAllViews();
         }
-        manager = new SubscriptionManager(getActivity());
-        subscriptions = manager.getAll();
-        context = getActivity();
 
         TextView mTextView;
         LinearLayout mLayout, mLayoutLeft, mLayoutRight;
         ImageView mButton;
 
-        for (final String single_subscription : subscriptions) {
+        for (String orgName : orgNames) {
 
             mLayout = new LinearLayout(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -80,15 +74,13 @@ public class SubscriptionFragment extends Fragment {
             mLayoutLeft.setOrientation(LinearLayout.HORIZONTAL);
             mLayoutLeft.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
 
-
             mButton = new ImageView(context);
             mButton.setBackgroundResource(R.drawable.ic_clear_black_24dp);
             mButton.setOnClickListener(v -> {
-                String s = String.valueOf(single_subscription);
-                SubscriptionManager manager = new SubscriptionManager(context);
-                manager.remove(s);
-                Log.d("logf", "Remove " + s);
-                onResume();
+                subscriptionManager.remove(orgName);
+                orgNames.remove(orgName);
+                Log.d("logf", "Remove " + orgName);
+                drawSubs();
             });
 
             mLayoutLeft.addView(mButton);
@@ -101,7 +93,7 @@ public class SubscriptionFragment extends Fragment {
             mLayoutRight.setGravity(Gravity.CENTER_VERTICAL);
 
             mTextView = new TextView(context);
-            mTextView.setText(single_subscription);
+            mTextView.setText(orgName);
             mTextView.setTextSize(17);
 
             mLayoutRight.addView(mTextView);
@@ -110,7 +102,6 @@ public class SubscriptionFragment extends Fragment {
             mLayout.addView(mLayoutRight);
 
             layout.addView(mLayout);
-
         }
     }
 }

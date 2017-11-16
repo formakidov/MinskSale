@@ -11,8 +11,8 @@
         android:layout_height="match_parent"
         tools:context="badcompany.by.minskshopping.MainFragment">
 
-        <ListView
-            android:id="@android:id/list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerEvents"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

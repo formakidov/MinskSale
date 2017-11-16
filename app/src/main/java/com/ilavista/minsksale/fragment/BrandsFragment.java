@@ -15,9 +15,9 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.ilavista.minsksale.database.DBManager;
+import com.ilavista.minsksale.database.repository.EventsRepository;
 import com.ilavista.minsksale.network.DownloadThread;
-import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.model.Event;
 import com.ilavista.minsksale.utils.InnerAnimatorListener;
 import com.ilavista.minsksale.activity.MainActivity;
 import com.ilavista.minsksale.ProgramConfigs;
@@ -89,7 +89,7 @@ public class BrandsFragment extends Fragment {
 //            pagerAdapter.setFragmentLeft(fragment);
 //            ((MainActivity) context).setPage(0);
 //            ((MainActivity) context).setType("by_organizer");
-//            ((MainActivity) context).setOrganizer(textView.getText().toString());
+//            ((MainActivity) context).setOrganizerName(textView.getText().toString());
         });
 
 //        mHandler = new Handler() {
@@ -152,7 +152,7 @@ public class BrandsFragment extends Fragment {
     }
 
     private void loadData() {
-        events = DBManager.loadEvents("All");
+        events = EventsRepository.loadAllEvents();
         getOrganizersFromEvent(events, organizers);
     }
 

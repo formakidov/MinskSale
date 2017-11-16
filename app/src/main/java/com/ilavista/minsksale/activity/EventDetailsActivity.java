@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ViewAnimationUtils;
@@ -16,17 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ilavista.minsksale.App;
-import com.ilavista.minsksale.network.ServerService;
-import com.ilavista.minsksale.utils.InnerAnimatorListener;
 import com.ilavista.minsksale.fragment.EventsListFragment;
 import com.ilavista.minsksale.R;
 import com.ilavista.minsksale.SubscriptionManager;
-import com.ilavista.minsksale.database.DBManager;
-import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.database.repository.EventsRepository;
+import com.ilavista.minsksale.model.Event;
 
 import java.text.DateFormatSymbols;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,24 +54,24 @@ public class EventDetailsActivity extends BaseActivity {
     private Boolean isFavorite = false;
     private Boolean isSubscribed = false;
 
+    private SubscriptionManager subscriptionManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getAppComponent().inject(this);
         setContentView(R.layout.activity_event_details);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_keyboard_arrow_left_white_24dp));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        Intent intent = getIntent();
-        int ID = intent.getIntExtra(EventsListFragment.EXTRA_MESSAGE_ID, -1);
-        int POSITION = intent.getIntExtra(EventsListFragment.EXTRA_MESSAGE_POSITION, 0);
+        int ID = (int) getIntent().getLongExtra(EventsListFragment.EXTRA_EVENT_ID, -1);
 
         event = loadEvent(ID);
 
-        // TODO: 11/8/17
-        final SubscriptionManager manager = new SubscriptionManager(this);
-        isSubscribed = manager.isInSubscriptions(event.getOrganizer());
+        subscriptionManager = SubscriptionManager.getInstance(this);
+        isSubscribed = subscriptionManager.isSubscribed(event.getOrganizer());
 
         Bitmap img = BitmapFactory.decodeFile(getFilesDir() + event.getImageName());
         image.setImageBitmap(img);
@@ -105,8 +100,9 @@ public class EventDetailsActivity extends BaseActivity {
                     layoutFavorite.setBackgroundResource(R.color.colorPrimary);
 
                     animator.start();
-                } else
+                } else {
                     layoutFavorite.setBackgroundResource(R.color.colorPrimary);
+                }
 
                 addEventToFavorite(event);
             }
@@ -123,7 +119,7 @@ public class EventDetailsActivity extends BaseActivity {
             if (isSubscribed) {
                 layoutSubscribe.setBackgroundResource(R.drawable.my_layout_no_left);
 
-                manager.remove(organizer.getText().toString());
+                subscriptionManager.remove(organizer.getText().toString());
 
                 isSubscribed = false;
             } else {
@@ -137,19 +133,17 @@ public class EventDetailsActivity extends BaseActivity {
                     layoutSubscribe.setBackgroundResource(R.color.colorPrimary);
                 }
 
-                manager.add(organizer.getText().toString());
+                subscriptionManager.subscribeTo(organizer.getText().toString());
 
                 isSubscribed = true;
             }
 
         });
-        rootLayout.setTranslationY(POSITION);
-        rootLayout.animate().translationY(0).setDuration(600).setListener(new InnerAnimatorListener(rootLayout)).start();
     }
 
     public Event loadEvent(int ID) {
-        Event event = DBManager.getEvent(ID);
-        isFavorite = DBManager.isFavorite(ID);
+        Event event = EventsRepository.getEvent(ID);
+        isFavorite = EventsRepository.isFavorite(ID);
         return event;
     }
 
@@ -198,12 +192,12 @@ public class EventDetailsActivity extends BaseActivity {
     }
 
     void addEventToFavorite(Event event) {
-        DBManager.insertFavorite(event);
+        EventsRepository .insertFavorite(event);
         isFavorite = true;
     }
 
     void removeEventFromFavorite(Event event) {
-        DBManager.removeFavorite(event);
+        EventsRepository .removeFavorite(event);
         isFavorite = false;
     }
 

@@ -1,25 +1,13 @@
 package com.ilavista.minsksale.network;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.ilavista.minsksale.Constants;
-import com.ilavista.minsksale.activity.MainActivity;
-import com.ilavista.minsksale.MyReceiver;
-import com.ilavista.minsksale.R;
-import com.ilavista.minsksale.SubscriptionManager;
-import com.ilavista.minsksale.database.DBManager;
-import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.database.repository.EventsRepository;
+import com.ilavista.minsksale.model.Event;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +49,6 @@ public class DownloadThread extends Thread {
             return;
         }
 
-        checkForSubscriptionEvents();
         loadDataInDB(events);
 
         // downloading images
@@ -101,7 +88,7 @@ public class DownloadThread extends Thread {
     }
 
     private void loadDataInDB(List<Event> events) {
-        DBManager.insert(events);
+        EventsRepository.insert(events);
     }
 
     private boolean isEventInDB(Event event) {
@@ -114,7 +101,7 @@ public class DownloadThread extends Thread {
     }
 
     private List<String> getListOfImagesOnDevice() {
-        List<Event> eventsOnDevice = DBManager.loadEvents("All");
+        List<Event> eventsOnDevice = EventsRepository.loadAllEvents();
         List<String> imageFilesOnDevice = new ArrayList<>();
         for (Event event : eventsOnDevice) {
             imageFilesOnDevice.add(event.getImageName());
@@ -169,58 +156,5 @@ public class DownloadThread extends Thread {
                 connection.disconnect();
         }
         return null;
-    }
-
-    private void checkForSubscriptionEvents() {
-        names = new ArrayList<>();
-        Boolean isThereIsNewEvents = false;
-        List<Event> eventsOld = DBManager.loadEvents("All");
-
-        for (Event event : eventsOld)
-            names.add(event.getName());
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification;
-        int index = 0;
-        List<String> listOfSubscriptions = new SubscriptionManager(context).getAll();
-        for (Event event : events) {
-            if (!isEventInDB(event)) {
-                isThereIsNewEvents = true;
-                for (String str : listOfSubscriptions) {
-                    if (str.equals(event.getOrganizer())) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.putExtra(MyReceiver.RECEIVER_MESSAGE_ID, event.getId());
-                        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            notification = new Notification.Builder(context)
-                                    .setContentTitle("Новое событие от " + event.getOrganizer())
-                                    .setContentText(event.getName())
-                                    .setSmallIcon(R.drawable.notification_image)
-                                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_image_large))
-                                    .setLights(Color.YELLOW, 3000, 3000)
-                                    .setVibrate(new long[]{0, 300, 100, 300})
-                                    .setContentIntent(pendingIntent)
-                                    .setAutoCancel(true).build();
-                        } else {
-                            notification = new NotificationCompat.Builder(context)
-                                    .setContentTitle("Новое событие от " + event.getOrganizer())
-                                    .setContentText(event.getName())
-                                    .setSmallIcon(R.drawable.notification_image)
-                                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_image_large))
-                                    .setLights(Color.YELLOW, 3000, 3000)
-                                    .setVibrate(new long[]{0, 300, 100, 300})
-                                    .setContentIntent(pendingIntent)
-                                    .setAutoCancel(true).build();
-                        }
-                        notificationManager.notify(index, notification);
-                    }
-                    index++;
-                }
-            }
-        }
-        if (isThereIsNewEvents) {
-            Log.d("logf_Downloading", "We have " + index + " new events");
-            loadDataInDB(events);
-        } else Log.d("logf_Downloading", "We have no new events");
     }
 }

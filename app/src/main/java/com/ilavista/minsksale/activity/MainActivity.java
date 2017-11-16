@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,7 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.ilavista.minsksale.MyReceiver;
+import com.ilavista.minsksale.UpdateReceiver;
 import com.ilavista.minsksale.ProgramConfigs;
 import com.ilavista.minsksale.R;
 import com.ilavista.minsksale.SubscriptionManager;
@@ -69,7 +67,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         ButterKnife.bind(this);
         Log.d("logf", "Main Activity onCreate");
 
-        SubscriptionManager.setNotifications(this, ProgramConfigs.getInstance(this).getNotificationPeriod());
+        SubscriptionManager.getInstance(this).setNotifications(ProgramConfigs.getInstance(this).getNotificationPeriod());
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,7 +79,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         // TODO: 11/9/17 deep link: open details with backstack
         if (getIntent() != null) {
-            extraID = getIntent().getLongExtra(MyReceiver.RECEIVER_MESSAGE_ID, -1);
+            extraID = getIntent().getLongExtra(UpdateReceiver.RECEIVER_MESSAGE_ID, -1);
         }
 
         replaceFragment(EventsListFragment.newInstance(type));
@@ -129,6 +127,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 selectNavigationItemChecked(R.id.nav_all);
                 type = "All";
                 break;
+            case R.id.nav_beauty:
+                selectNavigationItemChecked(R.id.nav_beauty);
+                type = "beauty";
+                break;
             case R.id.nav_clothes:
                 selectNavigationItemChecked(R.id.nav_clothes);
                 type = "clothes";
@@ -167,7 +169,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_selected:
                 selectNavigationItemChecked(R.id.nav_selected);
-                type = "selected";
+                type = "favorite";
                 break;
             case R.id.nav_subscription:
                 selectNavigationItemChecked(R.id.nav_subscription);

@@ -34,7 +34,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <receiver
-            android:name=".MyReceiver"
+            android:name=".UpdateReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

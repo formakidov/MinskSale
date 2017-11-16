@@ -2,6 +2,8 @@ package com.ilavista.minsksale.utils;
 
 import android.content.Context;
 
+import com.ilavista.minsksale.database.RealmSchemaModule;
+
 import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -15,6 +17,7 @@ public class RealmUtils {
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(SCHEMA_VERSION)
+                .modules(new RealmSchemaModule())
                 .build();
         Realm.setDefaultConfiguration(config);
     }
@@ -34,6 +37,10 @@ public class RealmUtils {
 
     public static void executeTransaction(RealmAction action) {
         executeAction(realm -> realm.executeTransaction(action::execute));
+    }
+
+    public static void executeTransactionAsync(RealmAction action) {
+        executeAction(realm -> realm.executeTransactionAsync(action::execute));
     }
 
     public static void insertOrUpdate(RealmObject entity) {

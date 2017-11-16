@@ -24,7 +24,7 @@ public class ProgramConfigs {
 
     private ProgramConfigs(Context context) {
         SharedPreferences sp = context.getSharedPreferences("Preferences", Context.MODE_PRIVATE);
-        notificationPeriod = sp.getInt(PREFERENCES_GET_PERIOD,12*60*60*1000);
+        notificationPeriod = sp.getInt(PREFERENCES_GET_PERIOD,3*60*60*1000);
         isInternetReceiverEnabled = sp.getBoolean(PREFERENCES_GET_INTERNET_RECEIVER, false);
         isFirstStart = true;
         Log.d("logf(ProgramConfigs)", "Loaded notificationPeriod: " + notificationPeriod / 1000 + " sec");

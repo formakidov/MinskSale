@@ -1,4 +1,4 @@
-package com.ilavista.minsksale.network;
+package com.ilavista.minsksale.dagger;
 
 import android.content.Context;
 
@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ilavista.minsksale.CacheManager;
 import com.ilavista.minsksale.Constants;
+import com.ilavista.minsksale.network.ConnectionManager;
+import com.ilavista.minsksale.network.ServerInterface;
+import com.ilavista.minsksale.network.ServerService;
 
 import java.util.concurrent.TimeUnit;
 

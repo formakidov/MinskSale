@@ -3,8 +3,10 @@ package com.ilavista.minsksale;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.ilavista.minsksale.dagger.AppComponent;
+import com.ilavista.minsksale.dagger.DaggerAppComponent;
 import com.ilavista.minsksale.utils.RealmUtils;
-import com.ilavista.minsksale.network.NetModule;
+import com.ilavista.minsksale.dagger.NetModule;
 
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;

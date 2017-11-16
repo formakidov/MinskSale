@@ -1,6 +1,6 @@
 package com.ilavista.minsksale.network;
 
-import com.ilavista.minsksale.database.model.Event;
+import com.ilavista.minsksale.model.Event;
 
 import java.util.List;
 

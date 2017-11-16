@@ -1,4 +1,4 @@
-package com.ilavista.minsksale.database.model;
+package com.ilavista.minsksale.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -7,8 +7,9 @@ import io.realm.annotations.PrimaryKey;
 
 public class Event extends RealmObject {
     public static final String FIELD_ID = "id";
-    public static final String FIELD_ORGANIZER = "Organizer";
-    public static final String FIELD_TYPE = "Type";
+    public static final String FIELD_RATE = "rate";
+    public static final String FIELD_ORGANIZER = "organizer";
+    public static final String FIELD_TYPE = "type";
 
     @SerializedName("ID")
     @PrimaryKey
